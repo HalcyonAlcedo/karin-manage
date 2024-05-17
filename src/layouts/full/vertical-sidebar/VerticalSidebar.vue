@@ -60,7 +60,7 @@ const sidebar = computed(()=>{
         <!-- <ExtraBox /> -->
       </div>
       <div class="pa-4 text-center">
-        <v-chip color="inputBorder" size="small"> v0.0.1 </v-chip>
+        <v-chip color="inputBorder" size="small"> v0.0.2 </v-chip>
       </div>
     </perfect-scrollbar>
   </v-navigation-drawer>

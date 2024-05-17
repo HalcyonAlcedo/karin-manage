@@ -13,7 +13,7 @@ const breadcrumbs = ref([
   {
     title: '插件配置',
     disabled: false,
-    href: '#'
+    href: '/plugin'
   },
   {
     title: route.params.plugin,

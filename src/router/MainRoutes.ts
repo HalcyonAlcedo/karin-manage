@@ -49,7 +49,7 @@ const MainRoutes = {
       path: '/utils/colors',
       component: () => import('@/views/utilities/colors/ColorPage.vue')
     },
-    PluginRoutes,KarinRoutes
+    ...PluginRoutes,KarinRoutes
   ]
 };
 
