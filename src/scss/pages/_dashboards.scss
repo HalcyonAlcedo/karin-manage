@@ -37,6 +37,15 @@
       background: rgb(var(--v-theme-darksecondary));
     }
   }
+
+  &.bubble-teal-shape {
+    &::before {
+      background: rgb(var(--v-theme-darkteal));
+    }
+    &::after {
+      background: rgb(var(--v-theme-darkteal));
+    }
+  }
 }
 
 .z-1 {
