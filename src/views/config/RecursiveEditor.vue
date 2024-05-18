@@ -61,11 +61,11 @@ const debouncedSetConfig = debounce((path, value, type) => {
                     <v-col v-for="(item, index) in props.data" :key="index" cols="12">
 
                         <VTextField
-                            v-if="(typeof item.value === 'string' && item.value !== 'NULL') || typeof item.value === 'number'"
+                            v-if="(item.type === 'text' || item.type === 'url' || item.type === 'number' || typeof item.value === 'string' && item.value !== 'NULL') || typeof item.value === 'number'"
                             :modelValue="item.value" :label="item.key" :hint="item.comment"
                             @input="debouncedSetConfig(item.path, $event.target.value, typeof item.value)" required
                             clearable variant="outlined" />
-                        <VCheckbox v-else-if="typeof item.value === 'boolean'" :modelValue="item.value"
+                        <VCheckbox v-else-if="item.type === 'boolean' || typeof item.value === 'boolean'" :modelValue="item.value"
                             @change="setConfig(item.path, $event.target.checked, typeof item.value)">
                             <template v-slot:label>
                                 <VTooltip v-if="item.comment" location="bottom">
