@@ -65,27 +65,12 @@ export const useConfigStore = defineStore({
       }
     },
     updataSidebarItems() {
-      let items = [
-        { header: '主页' },
-        {
-          title: '面板主页',
-          icon: DashboardIcon,
-          to: '/dashboard/default'
-        },
-      ]
-      let plugin = [
-        { divider: true },
-        { header: '插件配置' }
-      ]
-      let karin = [
-        { divider: true },
-        { header: 'Karin配置' }
-      ]
+      let plugin = []
+      let karin = []
       // 加入karin配置
       for (let item of this.karins) {
         karin.push({
           title: item,
-          icon: ConeIcon,
           to: `/karin/${item}`
         })
       }
@@ -93,11 +78,27 @@ export const useConfigStore = defineStore({
       for (let item of this.plugins) {
         plugin.push({
           title: item,
-          icon: PlugIcon,
           to: `/plugin/${item}`
         })
       }
-      this.sidebarItems = [...items,...karin,...plugin]
+      this.sidebarItems = [
+        { header: '主页' },
+        {
+          title: '面板主页',
+          icon: DashboardIcon,
+          to: '/dashboard/default'
+        },
+        {
+          title: 'Karin配置',
+          icon: ConeIcon,
+          children: karin
+        },
+        {
+          title: '插件配置',
+          icon: PlugIcon,
+          children: plugin
+        },
+      ]
     }
   }
 });
