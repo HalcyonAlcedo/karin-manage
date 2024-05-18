@@ -9,6 +9,7 @@ import BotList from './components/BotList.vue';
 import PluginCount from './components/PluginCount.vue';
 import RendererCount from './components/RendererCount.vue';
 import ManageUserCount from './components/ManageUserCount.vue';
+import MessageCount from './components/MessageCount.vue';
 </script>
 
 <template>
@@ -47,8 +48,12 @@ import ManageUserCount from './components/ManageUserCount.vue';
     <v-col cols="12" lg="4">
       <ManageUserCount />
     </v-col>
+    <!-- 统计信息 -->
+    <v-col cols="12" lg="7">
+      <MessageCount />
+    </v-col>
     <!-- 机器人列表 -->
-    <v-col cols="12" lg="6">
+    <v-col cols="12" lg="5">
       <BotList />
     </v-col>
   </v-row>

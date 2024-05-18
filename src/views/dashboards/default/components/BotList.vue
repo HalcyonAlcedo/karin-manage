@@ -4,38 +4,9 @@ import { request } from '@/utils/request';
 
 import { useServerStore } from '@/stores/server';
 
-// import icons
-import { ChevronUpIcon, ChevronDownIcon } from 'vue-tabler-icons';
-
 const apiStore = useServerStore();
 
-const botList = ref([
-  {
-    name: 'Bajaj Finery',
-    price: 145.58,
-    profit: 10
-  },
-  {
-    name: 'TTML',
-    price: 6.368,
-    profit: 10
-  },
-  {
-    name: 'Reliance',
-    price: 458.63,
-    profit: 10
-  },
-  {
-    name: 'TTML',
-    price: 5.631,
-    profit: 10
-  },
-  {
-    name: 'Stolon',
-    price: 6.368,
-    profit: 10
-  }
-]);
+const botList = ref([]);
 
 request.post(`${apiStore.baseUrl}/system/GetBotList`)
 .then((response) => {

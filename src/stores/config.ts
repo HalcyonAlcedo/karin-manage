@@ -27,6 +27,7 @@ export const useConfigStore = defineStore({
   state: () => ({
     plugins: [],
     karins: [],
+    version: '0.0.0',
     sidebarItems: [
       { header: '主页' },
       {
@@ -52,6 +53,11 @@ export const useConfigStore = defineStore({
           this.karins = karinResponse.data.data
         } else {
           throw new Error(karinResponse.data.message)
+        }
+        // 获取Karin配置列表
+        const karinVersion = await request.post('/system/GetKarinVersion');
+        if (karinVersion.data.status === 'success') {
+          this.version = karinVersion.data.data
         }
         this.updataSidebarItems()
       } catch (error) {
