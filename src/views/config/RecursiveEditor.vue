@@ -90,7 +90,7 @@ const debouncedSetConfig = debounce((path, value, type) => {
                                             {{ item.key }}
                                         </div>
                                         <v-btn-toggle
-                                            v-model="item.type"
+                                            v-model="item.arrayType"
                                             variant="outlined"
                                             divided
                                             >
@@ -106,8 +106,8 @@ const debouncedSetConfig = debounce((path, value, type) => {
                                             <v-col>
                                                 <v-text-field
                                                     :label="'值 ' + (arrindex + 1)" v-model="item.value[arrindex]"
-                                                    @input="debouncedSetConfig(item.path, item.value, item.type || 'string')" 
-                                                    :type="item.type || 'string'" append-icon="mdi-delete" @click:append="item.value.splice(arrindex, 1) && debouncedSetConfig(item.path, item.value, item.type || 'string')"></v-text-field>
+                                                    @input="debouncedSetConfig(item.path, item.value, item.arrayType || 'string')" 
+                                                    :type="item.arrayType || 'string'" append-icon="mdi-delete" @click:append="item.value.splice(arrindex, 1) && debouncedSetConfig(item.path, item.value, item.arrayType || 'string')"></v-text-field>
                                             </v-col>
                                         </v-row>
                                     </v-card-text>
