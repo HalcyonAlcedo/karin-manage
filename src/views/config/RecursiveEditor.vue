@@ -16,6 +16,9 @@ const updateDataValue = (array, targetPath, newValue) => {
     if (item.path === targetPath) {
       item.value = newValue;
     }
+    if (item.value === null || item.value === undefined) {
+        return
+    }
     // 如果value是数组，递归调用函数
     if (Array.isArray(item.value)) {
         updateDataValue(item.value, targetPath, newValue);
