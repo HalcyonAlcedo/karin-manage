@@ -39,7 +39,6 @@ const setConfig = (path, value, type) => {
                 value[i] = value[i].toString()
             }
         }
-        console.log(value)
     } else {
         if (type === 'number') {
             value = Number(value)
@@ -62,9 +61,19 @@ const debouncedSetConfig = debounce((path, value, type) => {
             <v-card-text>
                 <v-row dense>
                     <v-col v-for="(item, index) in props.data" :key="index" cols="12">
-
+                        <VSelect
+                            v-if="item.type === 'select' && item.item"
+                            :modelValue="item.value"
+                            :hint="item.comment"
+                            :items="item.item"
+                            :label="item.key"
+                            :multiple="item.multiple"
+                            @update:modelValue="setConfig(item.path, $event, typeof item.value)"
+                            item-title="name"
+                            item-value="value"
+                            required clearable variant="outlined" />
                         <VTextField
-                            v-if="(item.type === 'text' || item.type === 'url' || item.type === 'number' || typeof item.value === 'string' && item.value !== 'NULL') || typeof item.value === 'number'"
+                            v-else-if="(item.type === 'text' || item.type === 'url' || item.type === 'number' || typeof item.value === 'string' && item.value !== 'NULL') || typeof item.value === 'number' || (item.type === 'select' && !item.item)"
                             :modelValue="item.value" :label="item.key" :hint="item.comment"
                             @input="debouncedSetConfig(item.path, $event.target.value, typeof item.value)" required
                             clearable variant="outlined" />
