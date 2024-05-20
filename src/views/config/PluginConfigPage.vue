@@ -7,7 +7,10 @@ import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import RecursiveEditor from './RecursiveEditor.vue';
 
+import { useSnackbarStore } from '@/stores/snackbar';
+
 const route = useRoute();
+const snackbarStore = useSnackbarStore()
 
 const breadcrumbs = ref([
   {
@@ -67,11 +70,13 @@ const postConfig = () => {
     plugin: fileName,
     config: setConfig.value
   }).then((result) => {
+    snackbarStore.open('保存成功')
     getConfigs()
     // 更新数据
     changeConfig.value = []
     setConfig.value = []
   }).catch((error) => {
+    snackbarStore.open(`保存失败：${error.message}`, 'error')
     console.error(error)
   })
 }
