@@ -88,6 +88,8 @@ export const useConfigStore = defineStore({
           icon: DashboardIcon,
           to: '/dashboard/default'
         },
+        { divider: true },
+        { header: '配置' },
         {
           title: 'Karin配置',
           icon: ConeIcon,
@@ -98,6 +100,13 @@ export const useConfigStore = defineStore({
           icon: PlugIcon,
           children: plugin
         },
+        { divider: true },
+        { header: '用户' },
+        {
+          title: '用户管理',
+          icon: PlugIcon,
+          to: '/user/'
+        }
       ]
     }
   }

@@ -35,7 +35,7 @@ const getTimeOfDay = (hour: number): string => {
     </v-text-field>
     -->
     <v-divider></v-divider>
-    <perfect-scrollbar style="height: calc(100vh - 80vh); max-height: 515px">
+    <perfect-scrollbar style="height: calc(100vh - 75vh); max-height: 515px">
 
       <div class="bg-lightwarning rounded-md pa-5 my-3 circle sm-circle lg-circle">
         <h4>服务器</h4>
@@ -70,19 +70,15 @@ const getTimeOfDay = (hour: number): string => {
 
           <v-list-item-title class="text-subtitle-2"> Account Settings</v-list-item-title>
         </v-list-item>
-
-        <v-list-item color="secondary" rounded="md">
+        -->
+        <v-list-item :to="`/user/${authStore.user?.username}`" color="secondary" rounded="md">
           <template v-slot:prepend>
             <UserIcon size="20" class="mr-2" />
           </template>
 
-          <v-list-item-title class="text-subtitle-2"> Social Profile</v-list-item-title>
-
-          <template v-slot:append>
-            <v-chip color="warning" class="text-white" text="02" variant="flat" size="small" />
-          </template>
+          <v-list-item-title class="text-subtitle-2"> 用户配置</v-list-item-title>
         </v-list-item>
-        -->
+
         <v-list-item @click="authStore.logout()" color="secondary" rounded="md">
           <template v-slot:prepend>
             <LogoutIcon size="20" class="mr-2" />
