@@ -77,7 +77,6 @@ const postConfig = () => {
     if (response.data.status === 'success') {
       snackbarStore.open('保存成功')
       getConfigs()
-      console.log(response.data.data)
       for (const change of response.data.data) {
         changeConfig.value = changeConfig.value.filter(obj => !(obj.file === change.file && obj.key === change.key))
       }
