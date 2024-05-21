@@ -3,7 +3,8 @@ import { request } from '@/utils/request';
 import {
   PlugIcon,
   DashboardIcon,
-  ConeIcon
+  ConeIcon,
+  UserBoltIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -104,7 +105,7 @@ export const useConfigStore = defineStore({
         { header: '用户' },
         {
           title: '用户管理',
-          icon: PlugIcon,
+          icon: UserBoltIcon,
           to: '/user/'
         }
       ]
