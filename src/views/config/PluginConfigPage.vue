@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, shallowRef, provide, watch } from 'vue';
+import { ref, shallowRef, provide, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { request } from '@/utils/request';
 
@@ -28,6 +28,10 @@ const configs = ref([])
 const isFetchingConfigs = ref(false)
 const changeConfig = ref([])
 const setConfig = ref([])
+const page = ref(1)
+const pageCount = computed(()=>{
+  return Math.ceil(changeConfig.value.length / 5)
+})
 const headers = shallowRef([
   { title: '配置文件', key: 'file' },
   { title: '配置项', key: 'key' },
@@ -38,21 +42,21 @@ const getConfigs = () => {
   isFetchingConfigs.value = true;
   const pluginName = route.params.plugin;
   request.post('/config/GetPluginConfig', { plugin: pluginName })
-  .then((configData) => {
-    if (configData.data.status === 'success') {
-      Object.keys(configData.data.data).forEach(key => {
-        const data = configData.data.data[key]
-      });
-      configs.value = configData.data.data
-    }
-    isFetchingConfigs.value = false;
-  })
-  .catch((error) => {
-    console.error(error)
-    isFetchingConfigs.value = false;
-  })
+    .then((configData) => {
+      if (configData.data.status === 'success') {
+        Object.keys(configData.data.data).forEach(key => {
+          const data = configData.data.data[key]
+        });
+        configs.value = configData.data.data
+      }
+      isFetchingConfigs.value = false;
+    })
+    .catch((error) => {
+      console.error(error)
+      isFetchingConfigs.value = false;
+    })
 }
-const deleteItem = (item) =>{
+const deleteItem = (item) => {
   changeConfig.value.splice(changeConfig.value.indexOf(item), 1)
 }
 const processData = (path, value, file) => {
@@ -69,16 +73,26 @@ const postConfig = () => {
   request.post('/config/SetPluginConfig', {
     plugin: fileName,
     config: setConfig.value
-  }).then((result) => {
-    snackbarStore.open('保存成功')
-    getConfigs()
-    // 更新数据
-    changeConfig.value = []
+  }).then((response) => {
+    if (response.data.status === 'success') {
+      snackbarStore.open('保存成功')
+      getConfigs()
+      console.log(response.data.data)
+      for (const change of response.data.data) {
+        changeConfig.value = changeConfig.value.filter(obj => !(obj.file === change.file && obj.key === change.key))
+      }
+    } else {
+      snackbarStore.open('保存失败')
+    }
     setConfig.value = []
   }).catch((error) => {
     snackbarStore.open(`保存失败：${error.message}`, 'error')
     console.error(error)
   })
+}
+const postAllConfig = () => {
+  setConfig.value = changeConfig.value
+  postConfig()
 }
 watch(() => route.params, () => {
   getConfigs()
@@ -89,78 +103,57 @@ getConfigs()
 
 <template>
   <BaseBreadcrumb :title="route.params.plugin" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
-  <v-data-table 
-    v-if="changeConfig.length > 0" 
-    v-model="setConfig" 
-    :headers="headers"
-    :items="changeConfig"
-    show-select return-object>
-    <template v-slot:top>
-      <v-toolbar
-        flat
-      >
-        <v-toolbar-title>确认修改项</v-toolbar-title>
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        ></v-divider>
-        <v-spacer></v-spacer>
-        <v-btn
-          @click="postConfig"
-          class="mb-2"
-          color="primary"
-          dark
-        >
-          保存
-        </v-btn>
-      </v-toolbar>
-    </template>
-    <template v-slot:item.actions="{ item }">
-      <v-icon
-        size="small"
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
-  </v-data-table>
+  <v-banner v-if="changeConfig.length > 0" elevation="2" sticky style="z-index: 100;">
+    <v-data-table v-model="setConfig" v-model:page="page" :headers="headers" :items="changeConfig"
+      items-per-page="5" show-select return-object>
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-toolbar-title>确认修改项</v-toolbar-title>
+          <v-divider class="mx-4" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-btn @click="postAllConfig" class="mb-2" color="primary" dark>
+            全部保存
+          </v-btn>
+          <v-btn @click="postConfig" class="mb-2" color="primary" dark>
+            保存
+          </v-btn>
+        </v-toolbar>
+      </template>
+      <template v-slot:bottom>
+        <div class="text-center pt-2">
+          <v-pagination
+            v-model="page"
+            :length="pageCount"
+          ></v-pagination>
+        </div>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-icon size="small" @click="deleteItem(item)">
+          mdi-delete
+        </v-icon>
+      </template>
+    </v-data-table>
+  </v-banner>
+  <v-row>
+    <v-col cols="12" md="12">
+      <UiParentCard v-for="(config, key, index) in configs" :key="index" :title="key" class="my-4">
+        <recursive-editor :file="key" :data="config" />
+      </UiParentCard>
+    </v-col>
+  </v-row>
+  <v-dialog v-model="isFetchingConfigs" max-width="320" persistent>
+    <v-list class="py-2" color="primary" elevation="12" rounded="lg">
+      <v-list-item prepend-icon="mdi-contain" title="数据加载中">
+        <template v-slot:prepend>
+          <div class="pe-4">
+            <v-icon color="primary" size="x-large"></v-icon>
+          </div>
+        </template>
 
-  <VContainer cols="12" md="12">
-    <UiParentCard v-for="(config, key, index) in configs" :key="index" :title="key" class="my-4">
-      <recursive-editor :file="key" :data="config" />
-    </UiParentCard>
-  </VContainer>
-  <v-dialog
-      v-model="isFetchingConfigs"
-      max-width="320"
-      persistent
-    >
-      <v-list
-        class="py-2"
-        color="primary"
-        elevation="12"
-        rounded="lg"
-      >
-        <v-list-item
-          prepend-icon="mdi-contain"
-          title="数据加载中"
-        >
-          <template v-slot:prepend>
-            <div class="pe-4">
-              <v-icon color="primary" size="x-large"></v-icon>
-            </div>
-          </template>
-
-          <template v-slot:append>
-            <v-progress-circular
-              color="primary"
-              indeterminate="disable-shrink"
-              size="16"
-              width="2"
-            ></v-progress-circular>
-          </template>
-        </v-list-item>
-      </v-list>
-    </v-dialog>
+        <template v-slot:append>
+          <v-progress-circular color="primary" indeterminate="disable-shrink" size="16" width="2"></v-progress-circular>
+        </template>
+      </v-list-item>
+    </v-list>
+  </v-dialog>
 </template>
