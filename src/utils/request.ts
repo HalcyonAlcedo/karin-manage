@@ -28,7 +28,6 @@ request.interceptors.response.use(response => {
   return response;
 },
   error => {
-    console.log(error.response?.data)
     // 如果出现权限错误，检查用户是否失去登陆状态
     if (error.response?.data?.status === 'error' || error.response?.data === 'Unauthorized') {
       if (error.response?.data?.error === 'Unauthorized' || error.response?.data === 'Unauthorized') {

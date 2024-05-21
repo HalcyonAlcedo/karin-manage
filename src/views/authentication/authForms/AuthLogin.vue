@@ -5,6 +5,10 @@ import { useAuthStore } from '@/stores/auth';
 import { Form } from 'vee-validate';
 import { request } from '@/utils/request';
 
+import { useSnackbarStore } from '@/stores/snackbar';
+
+const snackbarStore = useSnackbarStore()
+
 const valid = ref(false);
 const show1 = ref(false);
 const traditional = ref(false);
@@ -49,7 +53,7 @@ const otpLogin = () => {
     }
   })
   .catch((error) => {
-    console.error(error)
+    snackbarStore.open(`登陆失败：${error.message}`, 'error')
   })
 }
 const quickLogin = () => {

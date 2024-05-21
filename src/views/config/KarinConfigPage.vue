@@ -79,12 +79,11 @@ const postConfig = () => {
         changeConfig.value = changeConfig.value.filter(obj => !(obj.file === change.file && obj.key === change.key))
       }
     } else {
-      snackbarStore.open('保存失败')
+      snackbarStore.open('保存失败', 'error')
     }
     setConfig.value = []
   }).catch((error) => {
     snackbarStore.open(`保存失败：${error.message}`, 'error')
-    console.error(error)
   })
 }
 const postAllConfig = () => {
