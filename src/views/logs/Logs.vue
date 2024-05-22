@@ -112,7 +112,7 @@ watch(toggle, () => {
                   <v-btn value="ALL">All</v-btn>
                   <v-btn value="INFO">INFO</v-btn>
                   <v-btn value="WARN">WARN</v-btn>
-                  <v-btn value="ERROR">ERROR</v-btn>
+                  <v-btn value="ERRO">ERROR</v-btn>
                   <v-btn value="MARK">MARK</v-btn>
                   <v-btn value="TRACE">TRACE</v-btn>
                 </v-btn-toggle>
