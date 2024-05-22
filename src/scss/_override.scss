@@ -29,6 +29,23 @@ html {
   }
 }
 
+/* 全局滚动条样式 */
+::-webkit-scrollbar {
+  width: 3px; /* 设置滚动条的宽度 */
+}
+
+/* 滚动条滑块样式 */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #ffffff11 0%, #e9c0db8c 20%, #e6c0fca6 40%, #d0a8ffa6 60%, #e9c0db8c 80%, #ffffff11 100%);
+  border-radius: 1.5px; /* 圆角 */
+}
+
+/* 滚动条轨道样式 */
+::-webkit-scrollbar-track {
+  background: #fff; /* 轨道颜色 */
+  border-radius: 1.5px; /* 圆角 */
+}
+
 @keyframes progress-circular-rotate {
   100% {
     transform: rotate(270deg);
