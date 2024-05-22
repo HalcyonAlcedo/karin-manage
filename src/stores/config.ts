@@ -79,7 +79,7 @@ export const useConfigStore = defineStore({
       // 加入插件配置
       for (let item of this.plugins) {
         plugin.push({
-          title: item,
+          title: item.replace(/^karin-plugin-/, ''),
           to: `/plugin/${item}`
         })
       }
