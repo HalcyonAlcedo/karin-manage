@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, shallowRef, provide, watch } from 'vue';
+import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { request } from '@/utils/request';
 import { useServerStore } from '@/stores/server';

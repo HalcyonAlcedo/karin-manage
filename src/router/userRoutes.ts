@@ -1,4 +1,4 @@
-const KarinRoutes = [
+const UserRoutes = [
   {
     name: 'User',
     path: '/user',
@@ -11,4 +11,4 @@ const KarinRoutes = [
   }
 ];
 
-export default KarinRoutes;
+export default UserRoutes;

@@ -4,7 +4,8 @@ import {
   PlugIcon,
   DashboardIcon,
   ConeIcon,
-  UserBoltIcon
+  UserBoltIcon,
+  TopologyStarIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -100,6 +101,13 @@ export const useConfigStore = defineStore({
           title: '插件配置',
           icon: PlugIcon,
           children: plugin
+        },
+        { divider: true },
+        { header: '系统' },
+        {
+          title: '运行日志',
+          icon: TopologyStarIcon,
+          to: '/system/logs'
         },
         { divider: true },
         { header: '用户' },
