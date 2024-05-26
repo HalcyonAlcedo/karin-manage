@@ -53,7 +53,7 @@ const level = (type) => {
       return 'info'
     case 'WARN':
       return 'warning'
-    case 'ERROR':
+    case 'ERRO':
       return 'error'
     case 'MARK':
       return '#546E7A'
