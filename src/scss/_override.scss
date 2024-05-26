@@ -29,14 +29,25 @@ html {
   }
 }
 
-/* 全局滚动条样式 */
-::-webkit-scrollbar {
-  width: 3px; /* 设置滚动条的宽度 */
+/* 横向滚动条样式 */
+::-webkit-scrollbar:horizontal {
+  height: 4px; /* 设置横向滚动条的高度 */
 }
 
-/* 滚动条滑块样式 */
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #ffffff11 0%, #e9c0db8c 20%, #e6c0fca6 40%, #d0a8ffa6 60%, #e9c0db8c 80%, #ffffff11 100%);
+/* 竖向滚动条样式 */
+::-webkit-scrollbar {
+  width: 4px; /* 设置竖向滚动条的宽度 */
+}
+
+/* 横向滚动条滑块样式 */
+::-webkit-scrollbar-thumb:horizontal {
+  background: linear-gradient(to right, #ffffff11 0%, #e9c0db25 40%, #e6c0fc80 45%, #d0a8ff80 55%, #e9c0db25 60%, #ffffff11 100%);
+  border-radius: 1.5px; /* 圆角 */
+}
+
+/* 竖向滚动条滑块样式 */
+::-webkit-scrollbar-thumb:vertical {
+  background: linear-gradient(to bottom, #ffffff11 0%, #e9c0db25 40%, #e6c0fc80 45%, #d0a8ff80 55%, #e9c0db25 60%, #ffffff11 100%);
   border-radius: 1.5px; /* 圆角 */
 }
 
@@ -45,6 +56,7 @@ html {
   background: #fff; /* 轨道颜色 */
   border-radius: 1.5px; /* 圆角 */
 }
+
 
 @keyframes progress-circular-rotate {
   100% {

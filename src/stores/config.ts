@@ -5,7 +5,8 @@ import {
   DashboardIcon,
   ConeIcon,
   UserBoltIcon,
-  TopologyStarIcon
+  TopologyStarIcon,
+  DatabaseCogIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -108,6 +109,11 @@ export const useConfigStore = defineStore({
           title: '运行日志',
           icon: TopologyStarIcon,
           to: '/system/logs'
+        },
+        {
+          title: '数据库',
+          icon: DatabaseCogIcon,
+          to: '/system/redis'
         },
         { divider: true },
         { header: '用户' },
