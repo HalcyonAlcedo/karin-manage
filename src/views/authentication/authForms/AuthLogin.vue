@@ -50,6 +50,8 @@ const otpLogin = () => {
   .then((response) => {
     if (response.data.status === 'success') {
       otpDialog.value = true;
+    } else {
+      snackbarStore.open(`登陆失败：${response.data.message}`, 'error')
     }
   })
   .catch((error) => {

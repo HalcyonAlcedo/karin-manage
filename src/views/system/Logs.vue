@@ -56,9 +56,11 @@ const level = (type) => {
     case 'ERRO':
       return 'error'
     case 'MARK':
-      return '#546E7A'
+      return '#9575CD'
     case 'TRACE':
-      return '#FF7043'
+      return '#546E7A'
+    case 'DEBU':
+      return '#26A69A'
     default:
       return '#6D4C41'
   }
@@ -109,12 +111,13 @@ watch(toggle, () => {
 
               <v-col cols="auto">
                 <v-btn-toggle v-model="toggle" variant="outlined" divided>
-                  <v-btn value="ALL">All</v-btn>
-                  <v-btn value="INFO">INFO</v-btn>
-                  <v-btn value="WARN">WARN</v-btn>
-                  <v-btn value="ERRO">ERROR</v-btn>
-                  <v-btn value="MARK">MARK</v-btn>
-                  <v-btn value="TRACE">TRACE</v-btn>
+                  <v-btn :color="level('ALL')" value="ALL">All</v-btn>
+                  <v-btn :color="level('INFO')" value="INFO">INFO</v-btn>
+                  <v-btn :color="level('WARN')" value="WARN">WARN</v-btn>
+                  <v-btn :color="level('ERRO')" value="ERRO">ERROR</v-btn>
+                  <v-btn :color="level('DEBU')" value="DEBU">DEBUG</v-btn>
+                  <v-btn :color="level('MARK')" value="MARK">MARK</v-btn>
+                  <v-btn :color="level('TRACE')" value="TRACE">TRACE</v-btn>
                 </v-btn-toggle>
               </v-col>
             </v-row>

@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { SettingsIcon, LogoutIcon, UserIcon } from 'vue-tabler-icons';
+import { LogoutIcon, UserIcon } from 'vue-tabler-icons';
 import { useAuthStore } from '@/stores/auth';
 import { useServerStore } from '@/stores/server';
 
 
-const swt1 = ref(true);
-const swt2 = ref(false);
 const authStore = useAuthStore();
 const serverStore = useServerStore();
 
@@ -26,7 +23,7 @@ const getTimeOfDay = (hour: number): string => {
   <!-- profile DD -->
   <!-- ---------------------------------------------- -->
   <div class="pa-4">
-    <h4 class="mb-n1"> {{ getTimeOfDay() }}好, <span class="font-weight-regular">{{ authStore.user?.username }}</span></h4>
+    <h4 class="mb-n1"> {{ getTimeOfDay(new Date().getHours()) }}好, <span class="font-weight-regular">{{ authStore.user?.username }}</span></h4>
     <!--
     <v-text-field persistent-placeholder placeholder="Search" class="my-3" color="primary" variant="outlined" hide-details>
       <template v-slot:prepend-inner>
