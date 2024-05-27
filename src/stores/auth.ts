@@ -6,6 +6,7 @@ import { request } from '@/utils/request';
 
 interface User {
   username: string;
+  routes: Array<string>;
   token: string;
 };
 
@@ -27,7 +28,8 @@ export const useAuthStore = defineStore({
         if (response.data.status === 'success') {
           this.user = {
             username: username,
-            token: response.data.token
+            routes: response.data.data.routes,
+            token: response.data.data.token
           }
         } else {
           throw new Error(response.data.message)
@@ -46,7 +48,8 @@ export const useAuthStore = defineStore({
         if (response.data.status === 'success') {
           this.user = {
             username: bot,
-            token: response.data.token
+            routes: response.data.data.routes,
+            token: response.data.data.token
           }
         } else {
           throw new Error(response.data.message)
@@ -55,6 +58,16 @@ export const useAuthStore = defineStore({
         throw new Error('服务器错误')
       }
       router.push(this.returnUrl || '/dashboard/default');
+    },
+    async elevation(auth: string) {
+      if (this.user?.routes !== undefined && this.user?.username) {
+        this.user.routes = [...this.user.routes, auth]
+        const response = await request.post('/user/change-permissions', { username: this.user.username, permissions: this.user.routes })
+        if (response.data.status === 'success') {
+          return true
+        }
+      }
+      return false
     },
     logout() {
       const username = this.user?.username
