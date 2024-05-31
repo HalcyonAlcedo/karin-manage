@@ -12,7 +12,6 @@ const SystemRoutes = [
     component: () => import('@/views/system/Redis.vue'),
     beforeEnter: (to, from, next) => {
       const auth = useAuthStore();
-      console.log(auth.user.routes)
       const isMatch = auth.user.routes.some(regex => new RegExp(regex).test('/redis/'))
       if (isMatch) {
         next(); 

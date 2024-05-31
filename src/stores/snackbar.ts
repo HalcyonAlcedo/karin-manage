@@ -10,7 +10,7 @@ export const useSnackbarStore = defineStore({
         showClose: true
     }),
     actions: {
-        open(msg, color = 'success') {
+        open(msg: string, color = 'success') {
             this.msg = msg;
             this.color = color;
             this.visible = true;

@@ -27,7 +27,7 @@ const headers = ref([
     sortable: false,
     key: 'key',
   },
-  { title: '值', sortable: false,align: 'start', width: 5, key: 'value' },
+  { title: '值', sortable: false, key: 'value' },
   { title: '类型', sortable: false, key: 'type' },
   { title: 'TTL', sortable: false, key: 'ttl' }
 ])
@@ -48,7 +48,7 @@ const loadItems = ({ page, itemsPerPage, sortBy }) => {
     .then((response) => {
       if (response.data.status === 'success') {
         serverItems.value = response.data.data.data
-        totalItems.value = response.data.data.totalPages
+        totalItems.value = response.data.data.total
         loading.value = false
       } else {
         snackbarStore.open('数据获取失败', 'error')
@@ -77,7 +77,11 @@ const debouncedSetSearch = debounce((event) => {
             variant="solo-filled" flat hide-details single-line></v-text-field>
         </template>
         <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items="serverItems"
-          :items-length="totalItems" :loading="loading" :search="search" @update:options="loadItems"></v-data-table-server>
+          :items-length="totalItems" :loading="loading" :search="search" @update:options="loadItems">
+          <template v-slot:item.value="{ value }">
+            <v-textarea :model-value="value" variant="underlined" :rows="Math.ceil(value.length / 30)" readonly auto-grow></v-textarea>
+          </template>
+        </v-data-table-server>
       </UiParentCard>
 
 

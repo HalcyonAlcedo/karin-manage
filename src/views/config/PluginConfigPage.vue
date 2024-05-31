@@ -81,10 +81,12 @@ const postConfig = () => {
         changeConfig.value = changeConfig.value.filter(obj => !(obj.file === change.file && obj.key === change.key))
       }
     } else {
+      isFetchingConfigs.value = false
       snackbarStore.open('保存失败', 'error')
     }
     setConfig.value = []
   }).catch((error) => {
+    isFetchingConfigs.value = false
     snackbarStore.open(`保存失败：${error.message}`, 'error')
   })
 }
