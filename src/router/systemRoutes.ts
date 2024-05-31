@@ -24,6 +24,11 @@ const SystemRoutes = [
     name: 'RedisAuthority',
     path: '/system/redis_authority',
     component: () => import('@/views/system/RedisAuthority.vue')
+  },
+  {
+    name: 'Terminal',
+    path: '/system/terminal',
+    component: () => import('@/views/system/Terminal.vue')
   }
 ];
 
