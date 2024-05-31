@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed, onMounted, nextTick } from 'vue';
+import { ref, watch, computed, nextTick } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import { useSnackbarStore } from '@/stores/snackbar';
@@ -17,13 +17,15 @@ const breadcrumbs = ref([
   }
 ]);
 const message = ref('')
-
+const listContainer = ref(null)
 const menu = ref(false)
 const terminal = ref({
   uin: 1001,
   name: 'terminal',
   isGroup: false,
-  group: undefined
+  group: undefined,
+  hotkey: 'Enter',
+  altKey: false
 })
 
 const linkAdapter = () => {
@@ -34,6 +36,7 @@ const linkAdapter = () => {
   }
 }
 const sendMsg = () => {
+  if (!message.value) return
   const message_id = -Math.floor(Math.random() * (9999999999 - 1000000000 + 1)) + 1000000000
   const msg = { 
     "self_id": 1000,
@@ -76,13 +79,27 @@ const msgColor = (sender) => {
       return '#6D4C41'
   }
 }
+const handleKeydown = (event) => {
+    if (event.key == terminal.value.hotkey && (terminal.value.altKey ? event.altKey : true)) {
+      sendMsg()
+    }
+  }
 const messages = computed(() => {
   return adapterStore.messages
 })
 const adapter = computed(() => {
   return adapterStore.adapter
 })
-
+watch(() => adapterStore.messages, (newMessages, oldMessages) => {
+    nextTick(() => {
+      const container = listContainer.value.$el;
+      // 检查用户是否已滚动到列表底部
+      if (container.scrollHeight - container.clientHeight <= container.scrollTop + 100) {
+        // 滚动到新的列表项
+        container.scrollTop = container.scrollHeight;
+      }
+    });
+}, { deep: true });
 </script>
 
 <template>
@@ -108,8 +125,8 @@ const adapter = computed(() => {
             <v-card min-width="300">
               <v-list>
                 <v-list-item
-                  subtitle="在这里设置发送消息者的信息"
-                  title="角色编辑"
+                  subtitle="在这里配置虚拟终端"
+                  title="配置"
                 >
                 </v-list-item>
               </v-list>
@@ -117,6 +134,7 @@ const adapter = computed(() => {
               <v-divider></v-divider>
 
               <v-list>
+                <v-list-subheader>角色编辑</v-list-subheader>
                 <v-list-item>
                   <v-text-field v-model="terminal.uin" label="用户ID" variant="underlined"></v-text-field>
                 </v-list-item>
@@ -124,26 +142,31 @@ const adapter = computed(() => {
                   <v-text-field v-model="terminal.name" label="用户名" variant="underlined"></v-text-field>
                 </v-list-item>
                 <v-list-item>
-                  <v-switch
-                    v-model="terminal.isGroup"
-                    label="群聊"
-                    hide-details
-                  ></v-switch>
+                  <v-switch v-model="terminal.isGroup" label="群聊" hide-details ></v-switch>
                 </v-list-item>
                 <v-list-item>
                   <v-text-field v-model="terminal.group" label="群号" variant="underlined"></v-text-field>
                 </v-list-item>
-
+              </v-list>
+              <v-divider></v-divider>
+              <v-list>
+                <v-list-subheader>发送消息</v-list-subheader>
+                <v-list-item>
+                  <v-text-field v-model="terminal.hotkey" label="快捷键" variant="underlined"></v-text-field>
+                </v-list-item>
+                <v-list-item>
+                  <v-switch v-model="terminal.altKey" label="需按下Alt" hide-details ></v-switch>
+                </v-list-item>
               </v-list>
             </v-card>
           </v-menu>
 
           <v-spacer></v-spacer>
-          <VBtn @click="linkAdapter" variant="text">{{ adapter?.readyState !== undefined ? 'close' : 'link' }}</VBtn>
+          <VBtn @click="linkAdapter" variant="text">{{ adapter?.readyState !== undefined ? '关闭' : '连接' }}</VBtn>
         </template>
         <v-col cols="12">
           <v-card>
-            <v-card-text style="height: 60vh; overflow-y: auto;">
+            <v-card-text style="height: 60vh; overflow-y: auto;" ref="listContainer">
               <v-list>
                 <v-list-item v-for="msg in messages" :key="msg.id">
                   <v-list-item-content>
@@ -188,7 +211,7 @@ const adapter = computed(() => {
               </v-list>
             </v-card-text>
             <v-divider></v-divider>
-            <v-card-actions>
+            <v-card-actions class="mx-5">
               <v-text-field
                 v-model="message"
                 append-icon="mdi-send"
@@ -198,6 +221,7 @@ const adapter = computed(() => {
                 variant="underlined"
                 clearable
                 @click:append="sendMsg"
+                @keydown="handleKeydown"
               ></v-text-field>
             </v-card-actions>
           </v-card>
