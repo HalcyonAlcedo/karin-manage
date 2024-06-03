@@ -36,6 +36,7 @@ const linkAdapter = () => {
   }
 }
 const sendMsg = () => {
+  if (!adapterStore.adapter) linkAdapter()
   if (!message.value) return
   const message_id = -Math.floor(Math.random() * (9999999999 - 1000000000 + 1)) + 1000000000
   const msg = { 
