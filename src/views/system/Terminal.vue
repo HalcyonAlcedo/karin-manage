@@ -245,7 +245,7 @@ watch(() => adapterStore.messages, (newMessages, oldMessages) => {
                 no-resize
                 :rows="original ? 5 : 1"
                 :rules="rules"
-                placeholder="请输入JSON格式的内容"
+                :placeholder="original ? '请输入JSON格式的内容' : ''"
                 @click:append="sendMsg"
                 @click:append-inner="original = !original"
                 @keydown="handleKeydown"
