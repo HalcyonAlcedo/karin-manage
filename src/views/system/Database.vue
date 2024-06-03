@@ -40,7 +40,7 @@ const loadItems = ({ page, itemsPerPage, sortBy }) => {
   loading.value = true
   let pattern = search.value
   if (pattern == '') pattern = '*'
-  request.post(`${apiStore.baseUrl}/redis/SearchData`, {
+  request.post(`${apiStore.baseUrl}/database/SearchData`, {
     pattern: pattern,
     page: page,
     count: itemsPerPage

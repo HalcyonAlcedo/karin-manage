@@ -72,7 +72,10 @@ export const adapterHandle = (adapter, data) => {
 
       for (const message of data.params.message) {
         if (message.type === 'text') {
-          msg += `${message.data.text}\n`
+          msg += `${message.data.text}`
+        }
+        if (message.type === 'at') {
+          msg += `@${message.data.qq} `
         }
         if (message.type === 'image') {
           image.push(message.data.file.replace(/^base64:\/\//, ''))
@@ -90,6 +93,9 @@ export const adapterHandle = (adapter, data) => {
       for (const message of data.params.message) {
         if (message.type === 'text') {
           msg += `${message.data.text}\n`
+        }
+        if (message.type === 'at') {
+          msg += `@${message.data.qq} `
         }
         if (message.type === 'image') {
           image.push(message.data.file.replace(/^base64:\/\//, ''))

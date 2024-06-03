@@ -39,16 +39,6 @@ html {
   width: 4px; /* 设置竖向滚动条的宽度 */
 }
 
-/* 横向滚动条悬停样式 */
-::-webkit-scrollbar:horizontal:hover {
-  height: 8px; /* 鼠标悬停时的高度 */
-}
-
-/* 竖向滚动条悬停样式 */
-::-webkit-scrollbar:hover {
-  width: 8px; /* 鼠标悬停时的宽度 */
-}
-
 /* 横向滚动条滑块样式 */
 ::-webkit-scrollbar-thumb:horizontal {
   background: linear-gradient(to right, #ffffff11 0%, #e9c0db25 40%, #e6c0fc80 45%, #d0a8ff80 55%, #e9c0db25 60%, #ffffff11 100%);

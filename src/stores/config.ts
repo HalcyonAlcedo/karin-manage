@@ -119,7 +119,7 @@ export const useConfigStore = defineStore({
         {
           title: '数据库',
           icon: DatabaseCogIcon,
-          to: '/system/redis'
+          to: '/system/database'
         },
         { divider: true },
         { header: '用户' },

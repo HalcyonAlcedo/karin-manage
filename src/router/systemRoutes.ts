@@ -7,23 +7,23 @@ const SystemRoutes = [
     component: () => import('@/views/system/Logs.vue')
   },
   {
-    name: 'Redis',
-    path: '/system/redis',
-    component: () => import('@/views/system/Redis.vue'),
+    name: 'Database',
+    path: '/system/database',
+    component: () => import('@/views/system/Database.vue'),
     beforeEnter: (to, from, next) => {
       const auth = useAuthStore();
-      const isMatch = auth.user.routes.some(regex => new RegExp(regex).test('/redis/'))
+      const isMatch = auth.user.routes.some(regex => new RegExp(regex).test('/database/'))
       if (isMatch) {
         next(); 
       } else {
-        next({ name: 'RedisAuthority' });
+        next({ name: 'DatabaseAuthority' });
       }
     }
   },
   {
-    name: 'RedisAuthority',
-    path: '/system/redis_authority',
-    component: () => import('@/views/system/RedisAuthority.vue')
+    name: 'DatabaseAuthority',
+    path: '/system/database_authority',
+    component: () => import('@/views/system/DatabaseAuthority.vue')
   },
   {
     name: 'Terminal',

@@ -27,7 +27,7 @@ const terminal = ref({
   hotkey: 'Enter',
   altKey: false
 })
-
+const original = ref(false)
 const linkAdapter = () => {
   if (adapterStore.adapter?.readyState === 1) {
     adapterStore.closeAAdapter()
@@ -37,35 +37,38 @@ const linkAdapter = () => {
 }
 const sendMsg = () => {
   if (!adapterStore.adapter) linkAdapter()
-  if (!message.value) return
+  if (!message.value.trim()) return
   const message_id = -Math.floor(Math.random() * (9999999999 - 1000000000 + 1)) + 1000000000
-  const msg = { 
-    "self_id": 1000,
-    "user_id": terminal.value.uin || 1001,
-    "time": Math.floor(Date.now() / 1000),
-    "message_id": message_id,
-    "real_id": message_id,
-    "message_seq": message_id,
-    "message_type": terminal.value.isGroup ? "group" : "private",
-    "sender": { 
+  try {
+    const msg = original.value ? message.value : JSON.stringify({ 
+      "self_id": 1000,
       "user_id": terminal.value.uin || 1001,
-      "nickname": terminal.value.name || "虚拟终端",
-      "card": terminal.value.name || "虚拟终端",
-      "role": "member"
-    }, 
-    "raw_message": message.value,
-    "font": 14,
-    "sub_type": terminal.value.isGroup ? "normal" : "friend",
-    "message": [
-      { "data": { "text": message.value }, "type": "text" }
-    ],
-    "message_format": "array",
-    "post_type": "message",
-    "group_id": terminal.value.group || 1000,
-    "target_id": 1000
+      "time": Math.floor(Date.now() / 1000),
+      "message_id": message_id,
+      "real_id": message_id,
+      "message_seq": message_id,
+      "message_type": terminal.value.isGroup ? "group" : "private",
+      "sender": { 
+        "user_id": terminal.value.uin || 1001,
+        "nickname": terminal.value.name || "虚拟终端",
+        "card": terminal.value.name || "虚拟终端",
+        "role": "member"
+      }, 
+      "raw_message": message.value,
+      "font": 14,
+      "sub_type": terminal.value.isGroup ? "normal" : "friend",
+      "message": [
+        { "data": { "text": message.value }, "type": "text" }
+      ],
+      "message_format": "array",
+      "post_type": "message",
+      "group_id": terminal.value.group || 1000,
+      "target_id": 1000
+    })
+    adapterStore.sendMessage(msg, original.value ? '自定义命令' : message.value)
+  } catch (error) {
+    snackbarStore.open(`终端消息发送失败${error}`, 'error')
   }
-
-  adapterStore.sendMessage(JSON.stringify(msg),message.value)
   message.value = ''
 }
 const msgColor = (sender) => {
@@ -81,21 +84,38 @@ const msgColor = (sender) => {
   }
 }
 const handleKeydown = (event) => {
-    if (event.key == terminal.value.hotkey && (terminal.value.altKey ? event.altKey : true)) {
-      sendMsg()
-    }
+  if (event.key == terminal.value.hotkey && (terminal.value.altKey ? event.altKey : true)) {
+    sendMsg()
   }
+}
+const validateJson = (value) => {
+  try {
+    JSON.parse(value)
+    return true
+  } catch (e) {
+    return '输入内容不是有效的JSON格式'
+  }
+}
 const messages = computed(() => {
   return adapterStore.messages
 })
 const adapter = computed(() => {
   return adapterStore.adapter
 })
+const rules = computed(() => {
+  return original.value ? [validateJson] : [];
+})
 watch(() => adapterStore.messages, (newMessages, oldMessages) => {
     nextTick(() => {
       const container = listContainer.value.$el;
       // 检查用户是否已滚动到列表底部
-      if (container.scrollHeight - container.clientHeight <= container.scrollTop + 100) {
+      if (
+        (container.scrollHeight - container.clientHeight) <= 
+        (
+          container.scrollTop + 
+          container.children[0].children[container.children[0].children.length - 1].offsetHeight
+        )
+      ) {
         // 滚动到新的列表项
         container.scrollTop = container.scrollHeight;
       }
@@ -143,7 +163,7 @@ watch(() => adapterStore.messages, (newMessages, oldMessages) => {
                   <v-text-field v-model="terminal.name" label="用户名" variant="underlined"></v-text-field>
                 </v-list-item>
                 <v-list-item>
-                  <v-switch v-model="terminal.isGroup" label="群聊" hide-details ></v-switch>
+                  <v-switch v-model="terminal.isGroup" color="primary" label="群聊" hide-details ></v-switch>
                 </v-list-item>
                 <v-list-item>
                   <v-text-field v-model="terminal.group" label="群号" variant="underlined"></v-text-field>
@@ -156,7 +176,7 @@ watch(() => adapterStore.messages, (newMessages, oldMessages) => {
                   <v-text-field v-model="terminal.hotkey" label="快捷键" variant="underlined"></v-text-field>
                 </v-list-item>
                 <v-list-item>
-                  <v-switch v-model="terminal.altKey" label="需按下Alt" hide-details ></v-switch>
+                  <v-switch v-model="terminal.altKey" color="primary" label="需按下Alt" hide-details ></v-switch>
                 </v-list-item>
               </v-list>
             </v-card>
@@ -192,7 +212,7 @@ watch(() => adapterStore.messages, (newMessages, oldMessages) => {
                         <div class="text-h6">{{ msg.time }}</div>
                       </v-alert-title>
                       <v-alert-text>
-                        {{msg.message}}
+                        <div v-html="msg.message.replace(/\n/g, '<br>')" />
                         <v-dialog v-for="img in msg.image" :key="img">
                           <template v-slot:activator="{ props: activatorProps }">
                             <v-img :src="'data:image/jpeg;base64,' + img" v-bind="activatorProps" style="max-width: 400px; height: auto;"></v-img>
@@ -213,17 +233,23 @@ watch(() => adapterStore.messages, (newMessages, oldMessages) => {
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions class="mx-5">
-              <v-text-field
+              <v-textarea
                 v-model="message"
                 append-icon="mdi-send"
                 clear-icon="mdi-close-circle"
+                :append-inner-icon="original ? 'mdi-message-arrow-right-outline' : 'mdi-message-text-outline'"
                 type="text"
                 label="消息"
                 variant="underlined"
                 clearable
+                no-resize
+                :rows="original ? 5 : 1"
+                :rules="rules"
+                placeholder="请输入JSON格式的内容"
                 @click:append="sendMsg"
+                @click:append-inner="original = !original"
                 @keydown="handleKeydown"
-              ></v-text-field>
+              ></v-textarea>
             </v-card-actions>
           </v-card>
         </v-col>

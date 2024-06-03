@@ -43,8 +43,16 @@ export const useAdapterStore = defineStore({
             message: `Connect to adapter: ${wsUrl}`
           })
           socket.send(JSON.stringify({ "time": Math.floor(Date.now() / 1000), "self_id": 1000, "post_type": "meta_event", "meta_event_type": "lifecycle", "sub_type": "connect" }))
+          // 心跳
           _this.heartbeat = setInterval(() => {
-            socket.send(JSON.stringify({ meta_event_type: 'heartbeat', status: 'ok' })   )
+            socket.send(JSON.stringify({
+              "time": Math.floor(Date.now() / 1000),
+              "self_id": 1000,
+              "post_type": "meta_event",
+              "meta_event_type": "heartbeat",
+              "status": { "online": true, "good": true },
+              "interval": 60000
+            }))
           }, 30000)
         };
         socket.onmessage = function (event) {
@@ -109,17 +117,21 @@ export const useAdapterStore = defineStore({
     async sendMessage(data, msg) {
       if (this.adapter === null) return
       if (msg) {
-        this.messages.push({
-          time: new Date().toLocaleTimeString('en-GB', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-          }),
-          sender: 'terminal',
-          data: JSON.parse(data),
-          message: msg
-        })
+        try {
+          this.messages.push({
+            time: new Date().toLocaleTimeString('en-GB', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false
+            }),
+            sender: 'terminal',
+            data: JSON.parse(data),
+            message: msg
+          })
+        } catch (error) {
+          return new Error(error)
+        }
       }
       this.adapter.send(data)
     }

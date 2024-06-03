@@ -20,16 +20,16 @@ const breadcrumbs = ref([
 const loading = ref(false)
 
 const isMatch = computed(() => {
-  return auth.user?.routes?.some(regex => new RegExp(regex).test('/redis/'))
+  return auth.user?.routes?.some(regex => new RegExp(regex).test('/database/'))
 })
 
 const elevation = async () => {
   if (isMatch.value) {
-    router.push('/system/redis')
+    router.push('/system/database')
     return
   }
   loading.value = true
-  if (!await auth.elevation('^/redis/.*$')) {
+  if (!await auth.elevation('^/database/.*$')) {
     snackbarStore.open('权限修改失败', 'error')
   }
   loading.value = false
@@ -40,7 +40,7 @@ const elevation = async () => {
   <BaseBreadcrumb :title="titlePage.title" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
   <v-row>
     <v-col>
-      <v-alert v-if="!isMatch" density="compact" text="不建议直接对Redis数据库进行修改，如确有需求，请点击下方申请权限为当前账号添加数据库访问权限。" title="警告"
+      <v-alert v-if="!isMatch" density="compact" text="不建议直接对数据库进行修改，如确有需求，请点击下方申请权限为当前账号添加数据库访问权限。" title="警告"
         type="warning" />
     </v-col>
     <v-col cols="12" md="12">
