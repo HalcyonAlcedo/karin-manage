@@ -52,7 +52,7 @@ const getConfigs = () => {
       isFetchingConfigs.value = false;
     })
     .catch((error) => {
-      console.error(error)
+      snackbarStore.open(`获取数据失败${error}`, 'error')
       isFetchingConfigs.value = false;
     })
 }
