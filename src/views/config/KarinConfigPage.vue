@@ -25,6 +25,7 @@ const breadcrumbs = ref([
   }
 ]);
 const configs = ref([])
+const view = ref([])
 const isFetchingConfigs = ref(false)
 const changeConfig = ref([])
 const setConfig = ref([])
@@ -46,6 +47,7 @@ const getConfigs = () => {
     .then((configData) => {
       if (configData.data.status === 'success') {
         configs.value = configData.data.data
+        view.value = configData.data.view
       }
       isFetchingConfigs.value = false;
     })
@@ -135,7 +137,7 @@ getConfigs()
 
   <v-row>
     <v-col cols="12" md="12">
-      <UiParentCard>
+      <UiParentCard :title="view?.name || ''">
         <v-row dense>
           <recursive-editor :file="route.params.file" :data="configs" />
         </v-row>

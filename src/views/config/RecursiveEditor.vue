@@ -4,6 +4,7 @@ import { debounce } from 'lodash';
 
 const props = defineProps({
     data: Array,
+    view: Array,
     file: String,
     title: String,
     subtitle: String
@@ -73,10 +74,11 @@ const debouncedSetConfig = debounce((path, value, type) => {
                             item-value="value"
                             required clearable variant="outlined" />
                         <VTextField
-                            v-else-if="(item.type === 'text' || item.type === 'url' || item.type === 'number' || typeof item.value === 'string' && item.value !== 'NULL') || typeof item.value === 'number' || (item.type === 'select' && !item.item)"
-                            :modelValue="item.value" :label="item.key" :hint="item.comment"
-                            @input="debouncedSetConfig(item.path, $event.target.value, typeof item.value)" required
-                            clearable variant="outlined" />
+                            v-else-if="(item.type === 'text' || item.type === 'url' || item.type === 'number' || item.type === 'password' || typeof item.value === 'string' && item.value !== 'NULL') || typeof item.value === 'number' || (item.type === 'select' && !item.item)"
+                            :modelValue="item.value" :label="item.key" :hint="item.comment" :append-inner-icon="item.type === 'password' ? (item.visible ? 'mdi-eye-off' : 'mdi-eye') : false"
+                            :type="item.type ? ((item.type === 'password' && item.visible) ? 'text' : item.type) : 'text'" :prefix="item.prefix" :suffix="item.suffix"
+                            @input="debouncedSetConfig(item.path, $event.target.value, typeof item.value)" @click:append-inner="item.visible = !item.visible"
+                            required clearable variant="outlined" />
                         <VCheckbox v-else-if="item.type === 'boolean' || typeof item.value === 'boolean'" :modelValue="item.value"
                             @change="setConfig(item.path, $event.target.checked, typeof item.value)">
                             <template v-slot:label>

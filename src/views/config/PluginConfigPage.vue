@@ -25,11 +25,12 @@ const breadcrumbs = ref([
   }
 ]);
 const configs = ref([])
+const view = ref([])
 const isFetchingConfigs = ref(false)
 const changeConfig = ref([])
 const setConfig = ref([])
 const page = ref(1)
-const pageCount = computed(()=>{
+const pageCount = computed(() => {
   return Math.ceil(changeConfig.value.length / 5)
 })
 const headers = shallowRef([
@@ -48,6 +49,7 @@ const getConfigs = () => {
           const data = configData.data.data[key]
         });
         configs.value = configData.data.data
+        view.value = configData.data.view
       }
       isFetchingConfigs.value = false;
     })
@@ -94,6 +96,9 @@ const postAllConfig = () => {
   setConfig.value = changeConfig.value
   postConfig()
 }
+const getTitle = (file) => {
+  return view.value?.find(el => el.file === (file.endsWith('.yaml') ? file : file + '.yaml')).name || file
+}
 watch(() => route.params, () => {
   getConfigs()
 });
@@ -104,8 +109,8 @@ getConfigs()
 <template>
   <BaseBreadcrumb :title="route.params.plugin" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
   <v-banner v-if="changeConfig.length > 0" elevation="2" sticky style="z-index: 100;">
-    <v-data-table v-model="setConfig" v-model:page="page" :headers="headers" :items="changeConfig"
-      items-per-page="5" show-select return-object>
+    <v-data-table v-model="setConfig" v-model:page="page" :headers="headers" :items="changeConfig" items-per-page="5"
+      show-select return-object>
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>确认修改项</v-toolbar-title>
@@ -121,10 +126,7 @@ getConfigs()
       </template>
       <template v-slot:bottom>
         <div class="text-center pt-2">
-          <v-pagination
-            v-model="page"
-            :length="pageCount"
-          ></v-pagination>
+          <v-pagination v-model="page" :length="pageCount"></v-pagination>
         </div>
       </template>
       <template v-slot:item.actions="{ item }">
@@ -136,7 +138,7 @@ getConfigs()
   </v-banner>
   <v-row>
     <v-col cols="12" md="12">
-      <UiParentCard v-for="(config, key, index) in configs" :key="index" :title="key" class="my-4">
+      <UiParentCard v-for="(config, key, index) in configs" :key="index" :title="getTitle(key)" class="my-4">
         <recursive-editor :file="key" :data="config" />
       </UiParentCard>
     </v-col>
