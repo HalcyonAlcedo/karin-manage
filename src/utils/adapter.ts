@@ -110,12 +110,14 @@ export const adapterHandle = (adapter, data) => {
       })
       break;
     default:
-      adapter.pushMessage({
-        time: time,
-        sender: 'adapter',
-        data: data,
-        message: '未知消息类型'
-      })
+      if (data.action) {
+        adapter.pushMessage({
+          time: time,
+          sender: 'adapter',
+          data: data,
+          message: '未知消息类型'
+        })
+      }
       break;
   }
 }
