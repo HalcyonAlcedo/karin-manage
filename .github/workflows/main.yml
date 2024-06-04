@@ -36,5 +36,6 @@ jobs:
           endpoint: oss-rg-china-mainland.aliyuncs.com
           access-key-id: ${{ secrets.OSS_KEY_ID }}
           access-key-secret: ${{ secrets.OSS_KEY_SECRET }}
+
       - name: Deply To OSS
         run: ossutil cp dist oss://karin/ -rf
