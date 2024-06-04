@@ -20,8 +20,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  if_merged:
-    if: github.event.pull_request.merged == true
+  greet:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
 
