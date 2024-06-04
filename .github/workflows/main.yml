@@ -1,8 +1,6 @@
 name: Node - Stage deploy
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches:
       - stage*
@@ -30,15 +28,12 @@ jobs:
       - name: 🔨 Build Project
         run: |         
           npm i
-          npm run build-stage
+          npm run build-nots
 
-      - name: 📂 Deploy to Server
-        uses: easingthemes/ssh-deploy@v4
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          # ARGS: "-rltgoDzvO --delete"
-          SOURCE: "dist/"
-          REMOTE_HOST: 192.34.62.123
-          REMOTE_USER: berry
-          TARGET: public_html/vue/free/stage
-          EXCLUDE: "/node_modules/"
+      - name: 📂 Deploy to aliyun oss
+        uses: manyuanrong/setup-ossutil@master
+        with:
+          endpoint: oss-rg-china-mainland.aliyuncs.com
+          access-key-id: ${{ secrets.OSS_KEY_ID }}
+          access-key-secret: ${{ secrets.OSS_KEY_SECRET }}
+        run: ossutil cp dist oss://karin/ -rf
