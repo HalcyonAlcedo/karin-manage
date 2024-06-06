@@ -14,7 +14,9 @@ const customizer = useCustomizerStore();
       theme="PurpleTheme"
       :class="[customizer.fontTheme, customizer.mini_sidebar ? 'mini-sidebar' : '', customizer.inputBg ? 'inputWithbg' : '']"
     >
+    <!--
       <Customizer />
+    -->
       <VerticalSidebarVue />
       <VerticalHeaderVue />
       <v-main>
