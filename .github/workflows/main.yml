@@ -3,12 +3,7 @@ name: Node - Stage deploy
 on:
   push:
     branches:
-      - stage*
-  pull_request:
-    types:
-      - closed
-    branches:
-      - stage*
+      - main
 
 jobs:
   if_merged:
