@@ -7,7 +7,8 @@ import {
   UserBoltIcon,
   TopologyStarIcon,
   DatabaseCogIcon,
-  TerminalIcon
+  TerminalIcon,
+  CloudComputingIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -107,7 +108,12 @@ export const useConfigStore = defineStore({
         { divider: true },
         { header: '系统' },
         {
-          title: '模拟终端',
+          title: '虚拟客户端',
+          icon: CloudComputingIcon,
+          to: '/system/vclient'
+        },
+        {
+          title: '远程终端',
           icon: TerminalIcon,
           to: '/system/terminal'
         },

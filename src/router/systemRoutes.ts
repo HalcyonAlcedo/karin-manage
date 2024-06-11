@@ -26,6 +26,11 @@ const SystemRoutes = [
     component: () => import('@/views/system/DatabaseAuthority.vue')
   },
   {
+    name: 'VirtualClient',
+    path: '/system/vclient',
+    component: () => import('@/views/system/VClient.vue')
+  },
+  {
     name: 'Terminal',
     path: '/system/terminal',
     component: () => import('@/views/system/Terminal.vue')

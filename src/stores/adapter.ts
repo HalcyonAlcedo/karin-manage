@@ -125,7 +125,7 @@ export const useAdapterStore = defineStore({
               second: '2-digit',
               hour12: false
             }),
-            sender: 'terminal',
+            sender: 'client',
             data: JSON.parse(data),
             message: msg
           })

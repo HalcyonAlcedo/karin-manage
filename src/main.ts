@@ -8,12 +8,13 @@ import '@/scss/style.scss';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import VueApexCharts from 'vue3-apexcharts';
 import VueTablerIcons from 'vue-tabler-icons';
-
+import Terminal from 'vue-web-terminal'
 import { fakeBackend } from '@/utils/helpers/fake-backend';
 
 // print
 import print from 'vue3-print-nb';
 
+import 'vue-web-terminal/lib/theme/dark.css'
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 
@@ -25,4 +26,5 @@ app.use(pinia);
 app.use(VueTablerIcons);
 app.use(print);
 app.use(VueApexCharts);
+app.use(Terminal)
 app.use(vuetify).mount('#app');
