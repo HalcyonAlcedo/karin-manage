@@ -6,9 +6,8 @@ on:
       - main
 
 jobs:
-  if_merged:
-    if: github.event.pull_request.merged == true
-    name: 🎉 Deploy
+  build_and_deploy:
+    name: 🎉 Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -32,5 +31,5 @@ jobs:
           access-key-id: ${{ secrets.OSS_KEY_ID }}
           access-key-secret: ${{ secrets.OSS_KEY_SECRET }}
 
-      - name: Deply To OSS
+      - name: Deploy To OSS
         run: ossutil cp dist oss://karin-manage/ -rf
