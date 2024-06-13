@@ -8,7 +8,8 @@ import '@/scss/style.scss';
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import VueApexCharts from 'vue3-apexcharts';
 import VueTablerIcons from 'vue-tabler-icons';
-import Terminal from 'vue-web-terminal'
+import Terminal from 'vue-web-terminal';
+import { VueMasonryPlugin } from 'vue-masonry';
 import { fakeBackend } from '@/utils/helpers/fake-backend';
 
 // print
@@ -26,5 +27,6 @@ app.use(pinia);
 app.use(VueTablerIcons);
 app.use(print);
 app.use(VueApexCharts);
-app.use(Terminal)
+app.use(Terminal);
+app.use(VueMasonryPlugin);
 app.use(vuetify).mount('#app');
