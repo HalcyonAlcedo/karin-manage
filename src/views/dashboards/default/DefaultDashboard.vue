@@ -4,8 +4,10 @@ import * as Vue from 'vue'
 import { onMounted, defineAsyncComponent, ref, computed } from "vue"
 import { request } from '@/utils/request';
 import { useServerStore } from '@/stores/server';
+import { useSnackbarStore } from '@/stores/snackbar';
 
 const apiStore = useServerStore();
+const snackbarStore = useSnackbarStore()
 
 const widgets = ref([])
 
@@ -96,7 +98,7 @@ const load = async () => {
     <!-- 远程组件 -->
     <v-col v-masonry-tile v-for="widget in widgetsList" :key="`${widget.plugin}-${widget.file}`" :lg="widget.col || 4"
       cols="12">
-      <component v-if="widget.remote" :is="widget.remote" :request="request" :apiUrl="apiStore.baseUrl"
+      <component v-if="widget.remote" :is="widget.remote" :request="request" :snackbar="snackbarStore" :apiUrl="apiStore.baseUrl"
         :data="widget.data" />
     </v-col>
   </v-row>
