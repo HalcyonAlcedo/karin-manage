@@ -2,10 +2,14 @@
 import { LogoutIcon, UserIcon } from 'vue-tabler-icons';
 import { useAuthStore } from '@/stores/auth';
 import { useServerStore } from '@/stores/server';
+import { useSnackbarStore } from '@/stores/snackbar';
+
+import { request } from '@/utils/request';
 
 
 const authStore = useAuthStore();
 const serverStore = useServerStore();
+const snackbarStore = useSnackbarStore();
 
 const getTimeOfDay = (hour: number): string => {
   if (hour >= 6 && hour < 12) {
@@ -15,6 +19,20 @@ const getTimeOfDay = (hour: number): string => {
   } else {
     return '晚上';
   }
+}
+
+const restart = () => {
+  request.post(`${serverStore.baseUrl}/system/restartServer`)
+    .then((response) => {
+      if (response.data.status === 'success') {
+        snackbarStore.open('服务重启成功')
+      } else {
+        snackbarStore.open('服务重启失败', 'error')
+      }
+    })
+    .catch((error) => {
+      snackbarStore.open('服务重启失败', 'error')
+    })
 }
 </script>
 
@@ -55,25 +73,24 @@ const getTimeOfDay = (hour: number): string => {
           </div>
         </div>
       </div>
-
-      <v-divider></v-divider>
       -->
+      <v-divider></v-divider>
+      
       <v-list class="mt-3">
-        <!--
-        <v-list-item color="secondary" rounded="md">
+        <v-list-item @click="restart()" color="secondary" rounded="md">
           <template v-slot:prepend>
-            <SettingsIcon size="20" class="mr-2" />
+            <BrandGravatarIcon size="20" class="mr-2" />
           </template>
 
-          <v-list-item-title class="text-subtitle-2"> Account Settings</v-list-item-title>
+          <v-list-item-title class="text-subtitle-2"> 重启服务 </v-list-item-title>
         </v-list-item>
-        -->
+
         <v-list-item :to="`/user/${authStore.user?.username}`" color="secondary" rounded="md">
           <template v-slot:prepend>
             <UserIcon size="20" class="mr-2" />
           </template>
 
-          <v-list-item-title class="text-subtitle-2"> 用户配置</v-list-item-title>
+          <v-list-item-title class="text-subtitle-2"> 用户配置 </v-list-item-title>
         </v-list-item>
 
         <v-list-item @click="authStore.logout()" color="secondary" rounded="md">
@@ -81,7 +98,7 @@ const getTimeOfDay = (hour: number): string => {
             <LogoutIcon size="20" class="mr-2" />
           </template>
 
-          <v-list-item-title class="text-subtitle-2"> 注销</v-list-item-title>
+          <v-list-item-title class="text-subtitle-2"> 注销 </v-list-item-title>
         </v-list-item>
       </v-list>
     </perfect-scrollbar>
