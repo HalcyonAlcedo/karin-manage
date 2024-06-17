@@ -20,11 +20,11 @@ export const useAuthStore = defineStore({
     returnUrl: null
   }),
   actions: {
-    async login(username: string, password: string) {
+    async login(username: string, password: string, remember:boolean) {
       // const user = await fetchWrapper.post(`${baseUrl}/authenticate`, { username, password });
       try {
         const passwordMd5 = md5(password)
-        const response = await request.post('/user/login', { username, password: passwordMd5 });
+        const response = await request.post('/user/login', { username, password: passwordMd5, remember });
         if (response.data.status === 'success') {
           this.user = {
             username: username,

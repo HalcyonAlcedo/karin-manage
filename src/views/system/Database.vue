@@ -39,7 +39,7 @@ const totalItems = ref(0)
 const loadItems = ({ page, itemsPerPage, sortBy }) => {
   loading.value = true
   let pattern = search.value
-  if (pattern == '') pattern = '*'
+  // if (pattern == '') pattern = '*'
   request.post(`${apiStore.baseUrl}/database/SearchData`, {
     pattern: pattern,
     page: page,

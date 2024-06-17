@@ -13,7 +13,7 @@ const valid = ref(false);
 const show1 = ref(false);
 const traditional = ref(false);
 const copySucceeded = ref(false);
-//const logform = ref();
+const remember = ref(false)
 const password = ref('');
 const username = ref('');
 const otp = ref('')
@@ -42,7 +42,7 @@ const copyRePassTip = () => {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const validate = (values: any, { setErrors }: any) => {
   const authStore = useAuthStore();
-  return authStore.login(username.value, password.value).catch((error) => setErrors({ apiError: error }));
+  return authStore.login(username.value, password.value, remember.value).catch((error) => setErrors({ apiError: error }));
 }
 const otpLogin = () => {
   quickError.value = ''
@@ -127,6 +127,14 @@ const quickLogin = () => {
         :type="show1 ? 'text' : 'password'" @click:append="show1 = !show1" class="pwdInput"></v-text-field>
 
       <div class="d-sm-flex align-center mt-2 mb-7 mb-sm-0">
+        <v-checkbox
+        v-model="remember"
+        label="保持登陆"
+        required
+        color="primary"
+        class="ms-n2"
+        hide-details
+      ></v-checkbox>
         <div class="ml-auto">
           <v-dialog max-width="500">
             <template v-slot:activator="{ props: activatorProps }">
