@@ -49,6 +49,7 @@ const otpLogin = () => {
   request.post('/user/quickLogin', { bot: bot.value, qq: qq.value })
   .then((response) => {
     if (response.data.status === 'success') {
+      otp.value = ''
       otpDialog.value = true;
     } else {
       snackbarStore.open(`登陆失败：${response.data.message}`, 'error')
