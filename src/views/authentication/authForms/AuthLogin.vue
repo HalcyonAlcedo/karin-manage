@@ -63,7 +63,7 @@ const quickLogin = () => {
   otpValidating.value = true
   const authStore = useAuthStore();
   return authStore.quickLogin(bot.value, otp.value).catch((error) => {
-    otpValidating.value = true
+    otpValidating.value = false
     otpDialog.value = false
     traditional.value = true
     quickError.value = error
