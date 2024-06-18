@@ -78,13 +78,15 @@ const load = async () => {
               },
             }
             // 加载远程组件
-            widgets.value.push({
-              plugin: widget.plugin,
-              file: widget.file,
-              data: widget.data,
-              col: widget.data?.col || 4,
-              remote: defineAsyncComponent(() => loadModule(widget.file, options))
-            })
+            if (!widget.disabledHome) {
+              widgets.value.push({
+                plugin: widget.plugin,
+                file: widget.file,
+                data: widget.data,
+                col: widget.data?.col || 4,
+                remote: defineAsyncComponent(() => loadModule(widget.file, options))
+              })
+            }
           }
         }
       })
@@ -98,8 +100,8 @@ const load = async () => {
     <!-- 远程组件 -->
     <v-col v-masonry-tile v-for="widget in widgetsList" :key="`${widget.plugin}-${widget.file}`" :lg="widget.col || 4"
       cols="12">
-      <component v-if="widget.remote" :is="widget.remote" :request="request" :snackbar="snackbarStore" :apiUrl="apiStore.baseUrl"
-        :data="widget.data" />
+      <component v-if="widget.remote" :is="widget.remote" :request="request" :snackbar="snackbarStore"
+        :apiUrl="apiStore.baseUrl" :data="widget.data" />
     </v-col>
   </v-row>
 </template>
