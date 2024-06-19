@@ -72,8 +72,8 @@ const getUserList = () => {
   request.post('/user/getLoginUserInfo', { bot: bot.value, qq: qq.value })
     .then((response) => {
       if (response.data.status === 'success') {
-        qqList.value = response.data.data.bots
-        botList.value = response.data.data.masters
+        qqList.value = response.data.data.masters
+        botList.value = response.data.data.bots
         if (qq.value !== '' && response.data.data.masters.length > 0) {
           qq.value = response.data.data.masters[0]
         }
