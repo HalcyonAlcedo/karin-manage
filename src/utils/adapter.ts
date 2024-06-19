@@ -88,6 +88,14 @@ export const adapterHandle = (adapter, data) => {
         message: msg,
         image
       })
+      adapter.sendMessage(JSON.stringify({
+        status: 'ok',
+        retcode: 0,
+        data: {
+          message_id: parseInt(Math.floor(Date.now() / 1000).toString().slice(0, 9), 10)
+        },
+        echo: echo
+      }))
       break;
     case 'send_private_msg':
       for (const message of data.params.message) {
@@ -108,6 +116,14 @@ export const adapterHandle = (adapter, data) => {
         message: msg,
         image
       })
+      adapter.sendMessage(JSON.stringify({
+        status: 'ok',
+        retcode: 0,
+        data: {
+          message_id: parseInt(Math.floor(Date.now() / 1000).toString().slice(0, 9), 10)
+        },
+        echo: echo
+      }))
       break;
     default:
       if (data.action) {
