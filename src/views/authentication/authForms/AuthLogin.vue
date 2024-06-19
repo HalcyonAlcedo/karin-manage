@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Social from '@/assets/images/auth/social.svg';
 import { useAuthStore } from '@/stores/auth';
 import { Form } from 'vee-validate';
@@ -19,15 +19,14 @@ const username = ref('');
 const otp = ref('')
 const qq = ref()
 const bot = ref()
+const qqList = ref([])
+const botList = ref([])
 const passwordRules = ref([
   (v: string) => !!v || '尚未输入密码'
 ]);
 const usernameRules = ref([
   (v: string) => !!v || '尚未输入用户名',
   (v: string) => /^[0-9a-zA-Z]+$/.test(v) || '只能由字母和数字组成'
-]);
-const qqRules = ref([
-(v: string) => /^\d+$/.test(v) || '只能由数字组成'
 ]);
 const quickError = ref('')
 const otpDialog = ref(false);
@@ -46,65 +45,81 @@ const validate = (values: any, { setErrors }: any) => {
 }
 const otpLogin = () => {
   quickError.value = ''
-  request.post('/user/quickLogin', { bot: bot.value, qq: qq.value })
-  .then((response) => {
-    if (response.data.status === 'success') {
-      otp.value = ''
-      otpDialog.value = true;
-    } else {
-      snackbarStore.open(`登陆失败：${response.data.message}`, 'error')
-    }
-  })
-  .catch((error) => {
-    snackbarStore.open(`登陆失败：${error.message}`, 'error')
-  })
+  request.post('/user/quickLogin', { bot: bot.value.hash || bot.value, qq: qq.value.hash || qq.value })
+    .then((response) => {
+      if (response.data.status === 'success') {
+        otp.value = ''
+        otpDialog.value = true;
+      } else {
+        snackbarStore.open(`登陆失败：${response.data.message}`, 'error')
+      }
+    })
+    .catch((error) => {
+      snackbarStore.open(`登陆失败：${error.message}`, 'error')
+    })
 }
 const quickLogin = () => {
   otpValidating.value = true
   const authStore = useAuthStore();
-  return authStore.quickLogin(bot.value, otp.value).catch((error) => {
+  return authStore.quickLogin(bot.value.hash || bot.value, otp.value).catch((error) => {
     otpValidating.value = false
     otpDialog.value = false
     traditional.value = true
     quickError.value = error
   });
 }
+const getUserList = () => {
+  request.post('/user/getLoginUserInfo', { bot: bot.value, qq: qq.value })
+    .then((response) => {
+      if (response.data.status === 'success') {
+        qqList.value = response.data.data.bots
+        botList.value = response.data.data.masters
+        if (qq.value !== '' && response.data.data.masters.length > 0) {
+          qq.value = response.data.data.masters[0]
+        }
+        if (bot.value !== '' && response.data.data.bots.length > 0) {
+          bot.value = response.data.data.bots[0]
+        }
+      }
+    })
+}
+const getBot = () => {
+  console.log(botList.value)
+  console.log(bot.value)
+  let _bot 
+  try {
+  _bot = botList.value.find(b => b.hash === bot.value).bot
+  } catch (error) {
+    _bot = bot.value.bot || bot.value
+  }
+  return _bot
+}
+onMounted(() => {
+  getUserList()
+})
 </script>
 
 <template>
-  <v-dialog
-    v-model="otpDialog"
-    max-width="400"
-    persistent
-  >
-    <v-card
-      class="py-12 px-8 text-center mx-auto ma-4"
-      max-width="420"
-      width="100%"
-    >
+  <v-dialog v-model="otpDialog" max-width="400" persistent>
+    <v-card class="py-12 px-8 text-center mx-auto ma-4" max-width="420" width="100%">
       <h3 class="text-h6 mb-2">
         请输入一次性密码以验证您的帐户
       </h3>
 
-      <div>登陆至{{ bot }}。</div>
+      <div>登陆至{{ getBot() }}。</div>
 
-      <v-otp-input
-        v-model="otp"
-        :disabled="otpValidating"
-        :loading="otpValidating"
-        @finish="quickLogin"
-        autofocus
-        color="primary"
-        variant="plain"
-      ></v-otp-input>
+      <v-otp-input v-model="otp" :disabled="otpValidating" :loading="otpValidating" @finish="quickLogin" autofocus
+        color="primary" variant="plain"></v-otp-input>
 
     </v-card>
   </v-dialog>
-  <v-text-field v-model="qq" :rules="qqRules" label="用户QQ" class="mt-4 mb-8" required density="comfortable"
-    variant="outlined" color="primary" hide-details="auto"></v-text-field>
-  <v-text-field v-model="bot" :rules="qqRules" label="机器人QQ" class="mt-4 mb-8" required density="comfortable"
-    variant="outlined" color="primary" hide-details="auto"></v-text-field>
-  <v-btn @click="otpLogin" block color="primary" variant="outlined" class="text-lightText socialBtn">
+  <v-autocomplete v-model="qq" label="用户QQ" class="mt-4 mb-8" required density="comfortable"
+    variant="outlined" color="primary" hide-details="auto" :items="qqList" item-title="bot"
+    item-value="hash"></v-autocomplete>
+  <v-autocomplete v-model="bot" label="机器人QQ" class="mt-4 mb-8" required density="comfortable"
+    variant="outlined" color="primary" hide-details="auto" :items="botList" item-title="bot"
+    item-value="hash"></v-autocomplete>
+  <v-btn @click="otpLogin" :disabled="!bot || !qq" block color="primary" variant="outlined" class="text-lightText socialBtn">
     <img :src="Social" alt="social" />
     <span class="ml-2">快捷登陆</span></v-btn>
   <div v-if="quickError" class="mt-2">
@@ -127,14 +142,7 @@ const quickLogin = () => {
         :type="show1 ? 'text' : 'password'" @click:append="show1 = !show1" class="pwdInput"></v-text-field>
 
       <div class="d-sm-flex align-center mt-2 mb-7 mb-sm-0">
-        <v-checkbox
-        v-model="remember"
-        label="保持登陆"
-        required
-        color="primary"
-        class="ms-n2"
-        hide-details
-      ></v-checkbox>
+        <v-checkbox v-model="remember" label="保持登陆" required color="primary" class="ms-n2" hide-details></v-checkbox>
         <div class="ml-auto">
           <v-dialog max-width="500">
             <template v-slot:activator="{ props: activatorProps }">
