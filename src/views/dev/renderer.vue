@@ -30,6 +30,9 @@ const code = ref(`<template>
 </template>
 
 <script setup>
+import request from 'request'
+import { ref } from 'vue'
+
 const props = defineProps({
   apiUrl: String,
   data: Object
@@ -108,18 +111,18 @@ onErrorCaptured((err, vm, info) => {
 <template>
   <BaseBreadcrumb title="渲染页面开发" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
   <v-row>
-    <v-col cols="12" md="6" class="d-flex">
+    <v-col cols="12" md="6">
       <v-row>
         <v-col cols="12">
           <v-card elevation="16" class="editor-container" height="59vh">
-            <codemirror v-model="code" placeholder="Code goes here..." :style="{ height: '100%' }" :autofocus="true"
+            <codemirror v-model="code" placeholder="Code goes here..." :style="{ height: '100%', width: '100%' }" :autofocus="true"
               :indent-with-tab="true" :tab-size="2" :extensions="codeExtensions" @ready="updateWidget"
               @change="updateWidget" />
           </v-card>
         </v-col>
         <v-col cols="12">
           <v-card elevation="16" class="editor-container" height="19vh">
-            <codemirror v-model="codeData" placeholder="在此处填写数据..." :style="{ height: '100%' }" :autofocus="true"
+            <codemirror v-model="codeData" placeholder="在此处填写数据..." :style="{ height: '100%', width: '100%' }" :autofocus="true"
               :indent-with-tab="true" :tab-size="2" :extensions="DtatExtensions" @ready="updateWidget"
               @change="updateWidget" />
           </v-card>
