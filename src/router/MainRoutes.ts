@@ -2,6 +2,7 @@ import PluginRoutes from './PluginRoutes';
 import KarinRoutes from './karinRoutes';
 import userRoutes from './userRoutes';
 import SystemRoutes from './systemRoutes';
+import DevRoutes from './devRoutes';
 
 const MainRoutes = {
   path: '/main',
@@ -52,7 +53,8 @@ const MainRoutes = {
       component: () => import('@/views/utilities/colors/ColorPage.vue')
     },
     ...PluginRoutes,KarinRoutes,
-    ...userRoutes, ...SystemRoutes
+    ...userRoutes, ...SystemRoutes,
+    ...DevRoutes
   ]
 };
 

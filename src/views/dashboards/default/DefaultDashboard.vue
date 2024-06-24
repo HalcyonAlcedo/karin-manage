@@ -66,7 +66,8 @@ const load = async () => {
           for (const widget of res.data.data) {
             const options = {
               moduleCache: {
-                vue: Vue
+                vue: Vue,
+                request: request
               },
               async getFile() {
                 return widget.widget

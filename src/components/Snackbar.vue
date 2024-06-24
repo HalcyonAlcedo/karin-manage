@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useSnackbarStore } from '@/stores/snackbar'
 
 const snackbarStore = useSnackbarStore()
@@ -15,11 +15,11 @@ snackbarStore.$subscribe((mutation, state) => {
     color.value = state.color
     timeout.value = state.timeout
     showClose.value = state.showClose
-})
+});
 
 const closeSnackbar = () => {
     snackbarStore.close()
-}
+};
 </script>
 
 <template>

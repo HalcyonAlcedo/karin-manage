@@ -8,7 +8,8 @@ import {
   TopologyStarIcon,
   DatabaseCogIcon,
   TerminalIcon,
-  CloudComputingIcon
+  CloudComputingIcon,
+  BrandVueIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -133,6 +134,13 @@ export const useConfigStore = defineStore({
           title: '用户管理',
           icon: UserBoltIcon,
           to: '/user/'
+        },
+        { divider: true },
+        { header: '开发' },
+        {
+          title: '渲染页面开发',
+          icon: BrandVueIcon,
+          to: '/dev/renderer'
         }
       ]
     }
