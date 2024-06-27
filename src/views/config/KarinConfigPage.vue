@@ -127,6 +127,9 @@ getConfigs()
           ></v-pagination>
         </div>
       </template>
+      <template v-slot:item.value="{ item }">
+        <p class="auto-wrap-text">{{ item.value }}</p>
+      </template>
       <template v-slot:item.actions="{ item }">
         <v-icon size="small" @click="deleteItem(item)">
           mdi-delete
@@ -160,3 +163,11 @@ getConfigs()
     </v-list>
   </v-dialog>
 </template>
+
+<style scoped>
+.auto-wrap-text {
+  max-width: 60vw;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+</style>

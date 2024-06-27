@@ -193,9 +193,9 @@ onMounted(() => {
 
 <template>
   <BaseBreadcrumb :title="route.params.plugin" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
-  <v-banner v-if="changeConfig.length > 0" elevation="2" sticky style="z-index: 100;">
+  <v-banner v-if="changeConfig.length > 0" elevation="2" sticky style="z-index: 100">
     <v-data-table v-model="setConfig" v-model:page="page" :headers="headers" :items="changeConfig" items-per-page="5"
-      show-select return-object>
+    show-select return-object>
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>确认修改项</v-toolbar-title>
@@ -213,6 +213,9 @@ onMounted(() => {
         <div class="text-center pt-2">
           <v-pagination v-model="page" :length="pageCount"></v-pagination>
         </div>
+      </template>
+      <template v-slot:item.value="{ item }">
+        <p class="auto-wrap-text">{{ item.value }}</p>
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon size="small" @click="deleteItem(item)">
@@ -254,3 +257,11 @@ onMounted(() => {
     </v-list>
   </v-dialog>
 </template>
+
+<style scoped>
+.auto-wrap-text {
+  max-width: 60vw;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+</style>
