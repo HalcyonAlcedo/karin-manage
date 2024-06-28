@@ -26,16 +26,17 @@ const breadcrumbs = ref([
 ]);
 const configs = ref([])
 const view = ref([])
+const associated = ref([])
 const isFetchingConfigs = ref(false)
 const changeConfig = ref([])
 const setConfig = ref([])
 const page = ref(1)
-const pageCount = computed(()=>{
+const pageCount = computed(() => {
   return Math.ceil(changeConfig.value.length / 5)
 })
 const headers = shallowRef([
-  { title: '配置文件', key: 'file' },
-  { title: '配置项', key: 'key' },
+  { title: '配置文件', key: 'file', sortable: false },
+  { title: '配置项', key: 'key', sortable: false },
   { title: '值', key: 'value', sortable: false },
   { title: '操作', key: 'actions', sortable: false }
 ])
@@ -48,6 +49,7 @@ const getConfigs = () => {
       if (configData.data.status === 'success') {
         configs.value = configData.data.data
         view.value = configData.data.view
+        associated.value = configData.data.associated
       }
       isFetchingConfigs.value = false;
     })
@@ -65,8 +67,18 @@ const processData = (path, value, file) => {
     item.value = value
   } else {
     changeConfig.value.push({
-      key: path, value, file
+      key: path,
+      value, file
     })
+    const extra = associated.value.find(obj => obj.config === path)
+    if (extra && extra.target?.value !== extra.target?.expected) {
+      changeConfig.value.push({
+        key: extra.target.path,
+        value: extra.target.expected,
+        file: extra.target.file,
+        associated: true
+      })
+    }
   }
 }
 const postConfig = () => {
@@ -104,8 +116,8 @@ getConfigs()
 <template>
   <BaseBreadcrumb :title="route.params.file" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
   <v-banner v-if="changeConfig.length > 0" elevation="2" sticky style="z-index: 100;">
-    <v-data-table v-model="setConfig" v-model:page="page" :headers="headers" :items="changeConfig"
-      items-per-page="5" show-select return-object>
+    <v-data-table v-model="setConfig" v-model:page="page" :headers="headers" :items="changeConfig" items-per-page="5"
+      show-select return-object>
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>确认修改项</v-toolbar-title>
@@ -121,14 +133,17 @@ getConfigs()
       </template>
       <template v-slot:bottom>
         <div class="text-center pt-2">
-          <v-pagination
-            v-model="page"
-            :length="pageCount"
-          ></v-pagination>
+          <v-pagination v-model="page" :length="pageCount"></v-pagination>
         </div>
       </template>
       <template v-slot:item.value="{ item }">
         <p class="auto-wrap-text">{{ item.value }}</p>
+      </template>
+      <template v-slot:item.key="{ item }">
+        {{ item.key }}
+        <v-chip v-if="item.associated" color="secondary">
+          依赖配置项
+        </v-chip>
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon size="small" @click="deleteItem(item)">
@@ -167,6 +182,7 @@ getConfigs()
 <style scoped>
 .auto-wrap-text {
   max-width: 60vw;
+  min-width: 40vw;
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
