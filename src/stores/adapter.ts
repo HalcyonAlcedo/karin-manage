@@ -2,6 +2,9 @@ import { defineStore } from 'pinia';
 import { useServerStore } from './server';
 import { request } from '@/utils/request';
 import { adapterHandle } from '@/utils/adapter';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
 
 export const useAdapterStore = defineStore({
   id: 'adapter',
@@ -33,7 +36,7 @@ export const useAdapterStore = defineStore({
         wsUrl = wsUrl.replace(/^(http)(s)?(:\/\/)/, function (match, p1, p2) {
           return 'ws' + (p2 ? 's' : '') + '://';
         })
-        const socket = new WebSocket(wsUrl)
+        const socket = new WebSocket(wsUrl,[authStore.user?.token || ''])
         const _this = this
         socket.onopen = function (event) {
           _this.messages.push({

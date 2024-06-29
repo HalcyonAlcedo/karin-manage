@@ -16,28 +16,19 @@ try {
   configStore.getConfigs()
 } catch (error) {
   snackbarStore.open(error, 'error')
-      }
+}
 
-const sidebar = computed(()=>{
+const sidebar = computed(() => {
   return configStore.sidebarItems
 })
-const version = computed(()=>{
+const version = computed(() => {
   return configStore.version
 })
 </script>
 
 <template>
-  <v-navigation-drawer
-    left
-    v-model="customizer.Sidebar_drawer"
-    elevation="0"
-    rail-width="75"
-    mobile-breakpoint="lg"
-    app
-    class="leftSidebar"
-    :rail="customizer.mini_sidebar"
-    expand-on-hover
-  >
+  <v-navigation-drawer left v-model="customizer.Sidebar_drawer" elevation="0" rail-width="75" mobile-breakpoint="lg" app
+    class="leftSidebar" :rail="customizer.mini_sidebar" expand-on-hover>
     <!---Logo part -->
 
     <div class="pa-5">
@@ -65,7 +56,7 @@ const version = computed(()=>{
         <!-- <ExtraBox /> -->
       </div>
       <div class="pa-4 text-center">
-        <v-chip color="inputBorder" size="small"> Karin v{{version}} </v-chip>
+        <v-chip color="inputBorder" size="small"> Karin v{{ version }} </v-chip>
       </div>
     </perfect-scrollbar>
   </v-navigation-drawer>
