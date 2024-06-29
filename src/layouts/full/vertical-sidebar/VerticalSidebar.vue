@@ -1,19 +1,22 @@
 <script setup lang="ts">
-import { ref, shallowRef } from 'vue';
 import { useCustomizerStore } from '../../../stores/customizer';
 import { useConfigStore } from '@/stores/config';
-import sidebarItems from './sidebarItem';
-
+import { useSnackbarStore } from '@/stores/snackbar';
 import NavGroup from './NavGroup/NavGroup.vue';
 import NavItem from './NavItem/NavItem.vue';
 import NavCollapse from './NavCollapse/NavCollapse.vue';
-import ExtraBox from './extrabox/ExtraBox.vue';
 import Logo from '../logo/LogoMain.vue';
 import { computed } from 'vue';
 
 const customizer = useCustomizerStore();
 const configStore = useConfigStore()
-configStore.getConfigs()
+const snackbarStore = useSnackbarStore()
+
+try {
+  configStore.getConfigs()
+} catch (error) {
+  snackbarStore.open(error, 'error')
+      }
 
 const sidebar = computed(()=>{
   return configStore.sidebarItems

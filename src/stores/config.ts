@@ -40,6 +40,42 @@ export const useConfigStore = defineStore({
         title: '面板主页',
         icon: DashboardIcon,
         to: '/dashboard/default'
+      },
+      { divider: true },
+      { header: '系统' },
+      {
+        title: '虚拟客户端',
+        icon: CloudComputingIcon,
+        to: '/system/vclient'
+      },
+      {
+        title: '远程终端',
+        icon: TerminalIcon,
+        to: '/system/terminal'
+      },
+      {
+        title: '运行日志',
+        icon: TopologyStarIcon,
+        to: '/system/logs'
+      },
+      {
+        title: '数据库',
+        icon: DatabaseCogIcon,
+        to: '/system/database'
+      },
+      { divider: true },
+      { header: '用户' },
+      {
+        title: '用户管理',
+        icon: UserBoltIcon,
+        to: '/user/'
+      },
+      { divider: true },
+      { header: '开发' },
+      {
+        title: '渲染页面开发',
+        icon: BrandVueIcon,
+        to: '/dev/renderer'
       }
     ]
   }),
@@ -65,10 +101,10 @@ export const useConfigStore = defineStore({
         if (karinVersion.data.status === 'success') {
           this.version = karinVersion.data.data
         }
-        this.updataSidebarItems()
       } catch (error) {
-        throw new Error('服务器错误')
+        throw new Error(`服务器错误：${error}`)
       }
+      this.updataSidebarItems()
     },
     updataSidebarItems() {
       let plugin = []
@@ -83,8 +119,8 @@ export const useConfigStore = defineStore({
       // 加入插件配置
       for (let item of this.plugins) {
         plugin.push({
-          title: item.replace(/^karin-plugin-/, ''),
-          to: `/plugin/${item}`
+          title: item.name?.replace(/^karin-plugin-/, '') || item.replace(/^karin-plugin-/, ''),
+          to: `/plugin/${item.name || item}`
         })
       }
       this.sidebarItems = [
