@@ -47,7 +47,7 @@ export const useAuthStore = defineStore({
         const response = await request.post('/user/quickLogin', { bot, otp });
         if (response.data.status === 'success') {
           this.user = {
-            username: bot,
+            username: response.data.data.user || bot,
             routes: response.data.data.routes,
             token: response.data.data.token
           }
