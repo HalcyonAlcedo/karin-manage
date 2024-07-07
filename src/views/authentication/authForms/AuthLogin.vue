@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineExpose } from 'vue';
 import Social from '@/assets/images/auth/social.svg';
 import { useAuthStore } from '@/stores/auth';
 import { Form } from 'vee-validate';
@@ -96,6 +96,9 @@ const getBot = () => {
 }
 onMounted(() => {
   getUserList()
+})
+defineExpose({
+  getUserList,
 })
 </script>
 

@@ -12,10 +12,18 @@ const server = ref(apiStore.baseUrl)
 const dialog = ref(false)
 const verifyMsg = ref('')
 const rules = ref(value => /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/.test(value) || '错误的URL') 
-          
+const childRef = ref(null)
+
 const request = axios.create({
-  timeout: 1000
+  timeout: 10000
 });
+
+ 
+const updateChild = () => {
+  if (childRef.value) {
+    childRef.value.getUserList();
+  }
+};
 
 const verifyServer = (url:string) => {
   if (!url) {
@@ -36,6 +44,7 @@ const verifyServer = (url:string) => {
       }
       verifyMsg.value = '验证通过'
       dialog.value = false
+      updateChild()
     } else {
       verifyMsg.value = `验证失败: ${response.data.error || '未知错误'}`
       dialog.value = true
@@ -78,7 +87,7 @@ verifyServer(apiStore.baseUrl)
                     <!---Left Part Logo -->
 
                     <!---Left Part Form-->
-                    <AuthLogin />
+                    <AuthLogin ref="childRef" />
                     <!---Left Part Form-->
                   </v-card-text>
                 </v-card>
