@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import { request } from '@/utils/request';
@@ -10,7 +10,7 @@ const page = ref({ title: '用户' });
 
 const userList = ref([]);
 
-const breadcrumbs = ref([
+const breadcrumbs = shallowRef([
   {
     title: '用户管理',
     disabled: true,

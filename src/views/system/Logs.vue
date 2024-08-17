@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, shallowRef, watch } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import { request } from '@/utils/request';
@@ -12,7 +12,7 @@ const logs = ref([]);
 const logError = ref('')
 const lastTime = ref('')
 const toggle = ref('ALL')
-const breadcrumbs = ref([
+const breadcrumbs = shallowRef([
   {
     title: '运行日志',
     disabled: true,

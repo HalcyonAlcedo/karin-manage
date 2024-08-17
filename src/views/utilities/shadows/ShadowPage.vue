@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 
 const page = ref({ title: 'Shadow Page' });
-const breadcrumbs = ref([
+const breadcrumbs = shallowRef([
   {
     title: 'Utilities',
     disabled: false,

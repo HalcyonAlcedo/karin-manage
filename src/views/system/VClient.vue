@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, computed, nextTick } from 'vue';
+import { ref, shallowRef, watch, computed, nextTick } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import { useSnackbarStore } from '@/stores/snackbar';
@@ -9,7 +9,7 @@ const snackbarStore = useSnackbarStore()
 const adapterStore = useAdapterStore()
 
 const titlePage = ref({ title: '虚拟客户端' });
-const breadcrumbs = ref([
+const breadcrumbs = shallowRef([
   {
     title: '虚拟客户端',
     disabled: true,

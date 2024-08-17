@@ -84,8 +84,6 @@ const getUserList = () => {
     })
 }
 const getBot = () => {
-  console.log(botList.value)
-  console.log(bot.value)
   let _bot 
   try {
   _bot = botList.value.find(b => b.hash === bot.value).bot

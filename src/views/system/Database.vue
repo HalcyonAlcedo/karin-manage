@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, shallowRef, watch } from 'vue';
 import { debounce } from 'lodash';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
@@ -11,7 +11,7 @@ const apiStore = useServerStore()
 const snackbarStore = useSnackbarStore()
 
 const titlePage = ref({ title: '数据库' });
-const breadcrumbs = ref([
+const breadcrumbs = shallowRef([
   {
     title: '数据库',
     disabled: true,

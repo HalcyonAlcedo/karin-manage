@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, shallowRef, onMounted, onUnmounted } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 import { useSnackbarStore } from '@/stores/snackbar';
@@ -20,7 +20,7 @@ const init_log = [
 ]
 
 const titlePage = ref({ title: '终端' })
-const breadcrumbs = ref([
+const breadcrumbs = shallowRef([
   {
     title: '终端',
     disabled: true,

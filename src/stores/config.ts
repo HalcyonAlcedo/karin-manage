@@ -9,7 +9,8 @@ import {
   DatabaseCogIcon,
   TerminalIcon,
   CloudComputingIcon,
-  BrandVueIcon
+  BrandVueIcon,
+  BrandAppstoreIcon
 } from 'vue-tabler-icons';
 
 export interface menu {
@@ -129,6 +130,11 @@ export const useConfigStore = defineStore({
           title: '面板主页',
           icon: DashboardIcon,
           to: '/dashboard/default'
+        },
+        {
+          title: '插件商店',
+          icon: BrandAppstoreIcon,
+          to: '/store'
         },
         { divider: true },
         { header: '配置' },

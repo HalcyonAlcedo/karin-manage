@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, shallowRef } from 'vue';
 import BaseBreadcrumb from '@/components/shared/BaseBreadcrumb.vue';
 import UiParentCard from '@/components/shared/UiParentCard.vue';
 
 const page = ref({ title: 'Tabler Icons' });
 const icons = ref('<iframe src="https://tablericons.com/" frameborder="0"  width="100%" height="600"></iframe>');
-const breadcrumbs = ref([
+const breadcrumbs = shallowRef([
   {
     title: 'Icons',
     disabled: false,
