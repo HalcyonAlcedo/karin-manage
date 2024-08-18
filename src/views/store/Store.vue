@@ -101,15 +101,20 @@ const checkUpdate = (app: string, version: string) => {
  * 获取商店插件信息
  */
 const getPluginsData = async ({ done }: any) => {
-
-    axios.get('http://dev.alcedo.top/getdata.php', { params: { start: pluginsCount.value } }).then((data) => {
-        if (data.data.length === 0) {
-            done('empty')
-        } else {
-            plugins.value.push(...data.data)
-            pluginsCount.value += data.data.length
-            done('ok')
-        }
+    /* 暂时不使用分页策略
+        axios.get('http://dev.alcedo.top/getdata.php', { params: { start: pluginsCount.value } }).then((data) => {
+            if (data.data.length === 0) {
+                done('empty')
+            } else {
+                plugins.value.push(...data.data)
+                pluginsCount.value += data.data.length
+                done('ok')
+            }
+        })
+    */
+    axios.get('https://halcyonalcedo.github.io/karin-store/plugins.json').then((data) => {
+        plugins.value.push(...data.data)
+        done('empty')
     })
 }
 /**
@@ -218,7 +223,7 @@ getLocalPluginsData()
 </script>
 
 <template>
-    <BaseBreadcrumb title="插件商店（测试）" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
+    <BaseBreadcrumb title="插件商店" :breadcrumbs="breadcrumbs"></BaseBreadcrumb>
     <v-infinite-scroll :items="plugins" :onLoad="getPluginsData" style="overflow: hidden;">
         <v-row dense>
             <template v-for="plugin in plugins" :key="plugin.app">

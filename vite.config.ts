@@ -37,7 +37,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000', // 目标后端服务地址
+        target: 'http://localhost:5333', // 目标后端服务地址
         changeOrigin: true, // 允许跨域
         secure: false, // 允许 HTTPS 下访问 HTTP
         rewrite: (path:string) => path.replace(/^\/api/, '')

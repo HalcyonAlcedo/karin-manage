@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import type { PersistedStateOptions } from 'pinia-plugin-persistedstate';
 
-const serverUrl = localStorage.getItem('api') || 'http://localhost:3000';
+const serverUrl = localStorage.getItem('api') || 'http://localhost:5333';
 
 export const useServerStore = defineStore({
   id: 'server',
