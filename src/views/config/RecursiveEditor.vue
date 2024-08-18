@@ -61,7 +61,7 @@ const debouncedSetConfig = debounce((path, value, type) => {
         <v-card :title="title" :subtitle="subtitle">
             <v-card-text>
                 <v-row dense>
-                    <v-col v-for="(item, index) in props.data" :key="index" cols="12">
+                    <v-col v-for="(item, index) in props.data" :key="index" :cols="item.cols || 12">
                         <VSelect
                             v-if="item.type === 'select' && item.item"
                             :modelValue="item.value"
