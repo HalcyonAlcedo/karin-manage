@@ -112,7 +112,7 @@ const getPluginsData = async ({ done }: any) => {
             }
         })
     */
-    axios.get('https://halcyonalcedo.github.io/karin-store/plugins.json').then((data) => {
+    axios.get(`https://halcyonalcedo.github.io/karin-store/plugins.json?timestamp=${new Date().getTime()}`).then((data) => {
         plugins.value.push(...data.data)
         done('empty')
     })
