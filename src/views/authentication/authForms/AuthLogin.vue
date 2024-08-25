@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, defineExpose } from 'vue';
+import { useRoute } from 'vue-router';
 import Social from '@/assets/images/auth/social.svg';
 import { useAuthStore } from '@/stores/auth';
 import { Form } from 'vee-validate';
@@ -7,6 +8,7 @@ import { request } from '@/utils/request';
 
 import { useSnackbarStore } from '@/stores/snackbar';
 
+const route = useRoute()
 const snackbarStore = useSnackbarStore()
 
 const valid = ref(false);
@@ -93,6 +95,14 @@ const getBot = () => {
   return _bot
 }
 onMounted(() => {
+  if(route.query.otp) {
+    otp.value = route.query.otp as string
+    otpDialog.value = true;
+    bot.value = 'input'
+    qq.value = 'input'
+    quickLogin()
+  }
+  
   getUserList()
 })
 defineExpose({

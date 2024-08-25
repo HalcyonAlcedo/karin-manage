@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import axios from 'axios';
+import { useRoute } from 'vue-router';
 import Logo from '@/layouts/full/logo/LogoDark.vue';
 import AuthLogin from '../authForms/AuthLogin.vue';
 
 import { useServerStore } from '@/stores/server';
 
+const route = useRoute()
 const apiStore = useServerStore();
 
 const server = ref(apiStore.baseUrl)
@@ -56,7 +58,12 @@ const verifyServer = (url:string) => {
   })
 }
 
-verifyServer(apiStore.baseUrl)
+if(route.query.server) {
+  verifyServer(route.query.server as string)
+} else {
+  verifyServer(apiStore.baseUrl)
+}
+
 </script>
 
 <template>
