@@ -47,6 +47,9 @@ const verifyServer = (url:string) => {
       verifyMsg.value = '验证通过'
       dialog.value = false
       updateChild()
+      if (childRef.value) {
+        childRef.value.queryLogin();
+      }
     } else {
       verifyMsg.value = `验证失败: ${response.data.error || '未知错误'}`
       dialog.value = true

@@ -94,7 +94,8 @@ const getBot = () => {
   }
   return _bot
 }
-onMounted(() => {
+
+const queryLogin = () => {
   if(route.query.otp) {
     otp.value = route.query.otp as string
     otpDialog.value = true;
@@ -102,7 +103,10 @@ onMounted(() => {
     qq.value = 'input'
     quickLogin()
   }
-  
+}
+
+onMounted(() => {
+  queryLogin()
   getUserList()
 })
 defineExpose({
