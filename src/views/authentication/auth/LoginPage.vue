@@ -59,7 +59,8 @@ const verifyServer = (url:string) => {
 }
 
 if(route.query.server) {
-  verifyServer(route.query.server as string)
+  server.value = decodeURIComponent(route.query.server as string)
+  verifyServer(decodeURIComponent(route.query.server as string))
 } else {
   verifyServer(apiStore.baseUrl)
 }
