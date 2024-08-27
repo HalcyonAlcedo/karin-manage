@@ -22,7 +22,7 @@ const request = axios.create({
 
  
 const updateChild = () => {
-  if (childRef.value) {
+  if (childRef?.value?.getUserList) {
     childRef.value.getUserList();
   }
 };
@@ -47,7 +47,7 @@ const verifyServer = (url:string) => {
       verifyMsg.value = '验证通过'
       dialog.value = false
       updateChild()
-      if (childRef.value) {
+      if (childRef?.value?.queryLogin) {
         childRef.value.queryLogin();
       }
     } else {
