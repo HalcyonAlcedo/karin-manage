@@ -47,6 +47,11 @@ const validate = (values: any, { setErrors }: any) => {
 }
 const otpLogin = () => {
   quickError.value = ''
+  if (bot.value === 'input' || bot.value.bot === 'input' || qq.value === 'input' || qq.value.bot === 'input') {
+    bot.value = 'input'
+    qq.value = 'input'
+  }
+  console.log(bot.value,qq.value)
   request.post('/user/quickLogin', { bot: bot.value.hash || bot.value, qq: qq.value.hash || qq.value })
     .then((response) => {
       if (response.data.status === 'success') {

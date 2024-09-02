@@ -11,30 +11,30 @@ import { useSnackbarStore } from '@/stores/snackbar';
 interface PluginInfo {
     app: string // 插件
     view: {
-        title: string, // 标题
-        subtitle?: string, // 副标题
-        text?: string, // 插件描述
-        author?: string, // 作者
-        icon?: string, // 插件图标
-        dev?: boolean, // 插件处于开发状态
+        title: string // 标题
+        subtitle?: string // 副标题
+        text?: string // 插件描述
+        author?: string // 作者
+        icon?: string // 插件图标
+        dev?: boolean // 插件处于开发状态
         home?: string // 插件主页
-    },
+    }
     install?: (string | {
-        linux: string;
-        win: string;
+        linux: string
+        win: string
     })[], // 安装流程
     uninstall?: (string | {
-        linux: string;
-        win: string;
-    })[], // 卸载流程
-    installable?: boolean, // 是否可安装
-    npm?: string, // npm包名称
-    git?: string, // git连接
+        linux: string
+        win: string
+    })[] // 卸载流程
+    installable?: boolean // 是否可安装
+    npm?: string // npm包名称
+    git?: string // git连接
     // 插件描述
     readme?: {
-        markdown?: string,
+        markdown?: string
         url?: string[]
-    },
+    }
     version: string // 版本
 }
 
@@ -81,22 +81,30 @@ const checkInstalled = (app: string) => {
  * @param version 
  */
 const checkUpdate = (app: string, version: string) => {
-    const compareVersions = (v1: string, v2: string) => {
-        const v1Parts = v1.split('.').map(Number);
-        const v2Parts = v2.split('.').map(Number);
-
-        for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
-            const part1 = v1Parts[i] || 0 // If a part is missing, treat it as 0
-            const part2 = v2Parts[i] || 0
-
-            if (part1 < part2) return -1
-            if (part1 > part2) return 1
-        }
-
-        return 0 // If all parts are equal
-    }
     return localPlugins.value.some(item => item.app === app && item.version && compareVersions(item.version, version) < 0)
 }
+
+/**
+ * 比较两个版本的大小
+ * @param {string} version1 - 第一个版本
+ * @param {string} version2 - 第二个版本
+ * @returns {number} - 1 如果 version1 大于 version2, -1 如果 version1 小于 version2, 0 如果相等
+ */
+const compareVersions = (v1: string, v2: string) => {
+    const v1Parts = v1.split('.').map(Number);
+    const v2Parts = v2.split('.').map(Number);
+
+    for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
+        const part1 = v1Parts[i] || 0 // If a part is missing, treat it as 0
+        const part2 = v2Parts[i] || 0
+
+        if (part1 < part2) return -1
+        if (part1 > part2) return 1
+    }
+
+    return 0 // If all parts are equal
+}
+
 /**
  * 获取商店插件信息
  */
@@ -112,10 +120,36 @@ const getPluginsData = async ({ done }: any) => {
             }
         })
     */
-    axios.get(`https://halcyonalcedo.github.io/karin-store/plugins.json?timestamp=${new Date().getTime()}`).then((data) => {
-        plugins.value.push(...data.data)
-        done('empty')
+
+    request.post('/system/GetStoreList').then((list) => {
+        if (list.data.status === 'success') {
+            list.data.data.forEach(async (url: string) => {
+                const data = await axios.get(`${url}?timestamp=${new Date().getTime()}`)
+                data.data.forEach(async (plugin: PluginInfo) => {
+                    const { app, version } = plugin;
+                    // 查找是否已存在相同 app 的对象
+                    const existingIndex = plugins.value.findIndex(item => item.app === app);
+                    if (existingIndex !== -1) {
+                        // 如果已存在，则比较版本号
+                        if (version !== '' && plugins.value[existingIndex].version !== '' && compareVersions(version, plugins.value[existingIndex].version) > 0) {
+                            // 如果新版本较新，则替换旧版本
+                            plugins.value[existingIndex] = plugin;
+                        }
+                    } else {
+                        // 如果不存在，则直接添加
+                        plugins.value.push(plugin);
+                    }
+                })
+            })
+            done('empty')
+        } else {
+            snackbarStore.open(`插件商店列表获取失败${list.data.error}`, 'error')
+            done('empty')
+        }
+    }).catch((error) => {
+        snackbarStore.open(`插件商店列表获取失败${error}`, 'error')
     })
+
 }
 /**
  * 获取本地已安装插件信息
@@ -184,7 +218,6 @@ const getUninstallStep = (plugin: PluginInfo) => {
 const execute = (plugin: PluginInfo) => {
     if (checkInstalled(plugin.app)) {
         executeStep.value = plugin.uninstall || getUninstallStep(plugin)
-
     } else {
         executeStep.value = plugin.install || getInstallStep(plugin)
     }
